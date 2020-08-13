@@ -20,5 +20,9 @@ dist/
 nbdist/
 .nb-gradle/
 
+# Maven
+log/
+target/
+
 ### secure ###
 src/main/resources/application.properties
