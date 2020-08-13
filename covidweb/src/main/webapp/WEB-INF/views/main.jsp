@@ -25,21 +25,25 @@
             .search-form{
                 margin: 0;
             }
+            .instance-search{
+                display: inline-block;
+            }
 
         </style>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
         <nav class = "navbar shadow">
-            <form class = "search-form" action="">
-                <select name="search-selector">
-                    <option value="All">전체</option>
-                    <option value="hospital">병원</option>
-                    <option value="restaurant">식당</option>
-                </select>
+            <select name="search-selector" class = "navbar__search-selector">
+                <option value="All">전체</option>
+                <option value="hospital">병원</option>
+                <option value="restaurant">식당</option>
+            </select>
 
-                <input type="text" class = "search-form__search-input">
-                <input type="submit" value="검색">
+            <form class = "search-form">
+                <div class = "instance-search">
+                    <input type="text" class = "instance-search__search-input">
+                </div>
             </form>
         </nav>
 
@@ -47,7 +51,7 @@
         <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=h76lgnlg6i"></script>
         <script>
-            $('.search-form__search-input').on("input", function(event){
+            $('.instance-search__search-input').on("input", function(event){
                 const target = event.target;
                 const query = target.value;
                 const url = `/search?query=${query}`;
@@ -57,13 +61,11 @@
                     type : "GET",
                     success : function(response){
                         const jsonResponse = JSON.parse(response);
+                        $(".instance-search").append("<div>a</div>")
                         console.log(jsonResponse.items)
                     },
                     error : function(req, status, error){
                         alert("검색 실패!")
-                    },
-                    complete : function(){
-
                     }
                 })
             })
