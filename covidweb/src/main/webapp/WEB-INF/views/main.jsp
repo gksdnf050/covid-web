@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page isELIgnored="true" %>
 <html>
     <head>
         <title>맵</title>
@@ -37,15 +38,35 @@
                     <option value="restaurant">식당</option>
                 </select>
 
-                <input type="text">
+                <input type="text" class = "search-form__search-input">
                 <input type="submit" value="검색">
             </form>
         </nav>
 
         <div id="map" class = "covid-map"></div>
-
+        <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=h76lgnlg6i"></script>
         <script>
+            $('.search-form__search-input').on("input", function(event){
+                const target = event.target;
+                const query = target.value;
+                const url = `/search?query=${query}`;
+
+                $.ajax({
+                    url : url,
+                    type : "GET",
+                    success : function(response){
+                        const jsonResponse = JSON.parse(response);
+                        console.log(jsonResponse.items)
+                    },
+                    error : function(req, status, error){
+                        alert("검색 실패!")
+                    },
+                    complete : function(){
+
+                    }
+                })
+            })
             var mapOptions = {
                 center: new naver.maps.LatLng(37.3595704, 127.105399),
                 zoom: 10
