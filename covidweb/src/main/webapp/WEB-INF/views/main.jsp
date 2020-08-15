@@ -17,12 +17,6 @@
                 overflow: hidden;
             }
 
-            .covid-map{
-                /* 화면 전체를 맵으로 */
-                width:100%;
-                height:100%;
-            }
-
             .focus{
                 /* focus를 얻으면 테두리 추가 */
                 border: 1px solid #0475f4;
@@ -30,6 +24,12 @@
 
             .selected{
                 background: #eef7ff;
+            }
+
+            .covid-map{
+                /* 화면 전체를 맵으로 */
+                width:100%;
+                height:100%;
             }
 
             .search-form {
@@ -66,10 +66,6 @@
 
             .search-form__suggestion{
                 padding : 12px 5px 5px 5px; /* 추천 검색어 사이의 간격 */
-            }
-
-            .search-form__suggestion:hover{
-                background: #eef7ff;
             }
 
             .suggestion__category{
@@ -138,21 +134,19 @@
             }
         </style>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
     </head>
 
     <body>
         <form class="search-form">
-            <button type="submit" class="search-button">
+            <button type="submit" class="search-button">    <%-- submit 버튼 --%>
                 <svg class="submit-button">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
                 </svg>
             </button>
-            <input type = "search" value="" placeholder="장소, 주소 입력" class="search-form__search-input">
-            <span class = "search-form__clear-button glyphicon glyphicon-remove-circle"></span>
-            <div class = "search-form__suggestions"></div>
+            <input type = "search" value="" placeholder="장소, 주소 검색" class="search-form__search-input">  <%-- 주소 검색 창 --%>
+            <span class = "search-form__clear-button glyphicon glyphicon-remove-circle"></span> <%-- 입력 내용 삭제 버튼 --%>
+            <div class = "search-form__suggestions"></div>  <%-- 추천 검색어 container --%>
         </form>
 
         <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" display="none">
@@ -164,32 +158,31 @@
         <div id="map" class = "covid-map"></div>
 
         <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=h76lgnlg6i"></script>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=h76lgnlg6i"></script>  <%-- 네이버 맵 --%>
 
         <script>
-            const searchFormElem = $(".search-form");
-            const searchInputElem = $('.search-form__search-input');
-            const suggestionsElem = $(".search-form__suggestions");
-            const clearButtonElem = $(".search-form__clear-button");
-            const mapElem = $("#map");
+            const searchFormElem = $(".search-form");   <%-- 주소 검색 form elem --%>
+            const searchInputElem = $('.search-form__search-input'); <%-- 주소 검색 input 요소 --%>
+            const suggestionsElem = $(".search-form__suggestions"); <%-- 추천 검색어 container --%>
+            const clearButtonElem = $(".search-form__clear-button");    <%-- 입력 내용 제거 요소 --%>
+            const mapElem = $("#map");  <%-- 네이버 맵 --%>
 
-            const HOVER_TIMEOUT = 5;
             const INPUT_EVENT_MIN_INTERVAL = 10;   // input 태그의 이벤트 발생 최소 간격
-            let lastKeyEvent = 0;   // 가장 최근에 발생한 이벤트의 timestamp
+            let lastKeyEvent = 0;   // input 태그의 가장 최근에 발생한 이벤트의 timestamp
 
             let selectedSuggestionIndex = 0;    // 선택된 추천 검색어의 index
 
             function removeSuggestions(){   // 모든 추천 검색어 삭제
                 const suggestionElem = $(".search-form__suggestion");
-                searchFormElem.css( "padding-bottom", "0px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
+                searchFormElem.css( "padding-bottom", "0px"); // 추천 검색어와 form 태그의 간격을 제거
 
-                suggestionElem.remove(); // 기존 검색어 추천 삭제
+                suggestionElem.remove(); // 기존 검색어 추천 모두 삭제
             }
 
             mapElem.on("click", () => { // 맵 클릭 시
-                searchInputElem.blur(); // searchInput의 focus 제거
+                searchInputElem.blur(); // searchInput의 focus 제거 (blur 하지 않으면 맵을 클릭해도 searchInputElem의 focus가 제거되지 않아 추천 검색어가 사라지지 않음.)
             })
 
             clearButtonElem.on("click", () => {
@@ -200,13 +193,14 @@
             searchFormElem.submit(function(event) {
                 event.preventDefault(); // 기본 리스너 동작 제거
 
-                let selectElem = $(".selected") // 추천 검색어들 중 선택된 검색어
+                let selectElem = $(".selected").eq(0) // 추천 검색어들 중 선택된 첫번째 검색어
                 const suggestionElem = $(".search-form__suggestion");   // 추천 검색어 모두 선택
 
                 if(selectElem.length === 0){    // 선택된 검색어가 없는 경우
                     selectElem = suggestionElem.eq(0);  // 추천 검색어들 중 첫번째 추천 검색어 선택
                 }
 
+                const selectedValue = selectElem.children(".suggestion__title").text(); // 선택한 추천 검색어의 title
                 const xCoordinateELem = selectElem.children("input[name = 'x']")
                 const yCoordinateELem = selectElem.children("input[name = 'y']")
 
@@ -214,18 +208,20 @@
                 const y = yCoordinateELem.val();    // y 좌표
 
                 map.setCenter(new naver.maps.LatLng(y, x))  // map 이동
-                clearButtonElem.click();    // input 태그 내용 삭제 및 추천 검색어 삭제
+
+                searchInputElem.val(selectedValue);    // input 태그에 입력된 값을 선택한 추천 검색어의 title로 수정.
+                searchInputElem.blur(); // input 태그의 focus를 제거해서 추천 검색어가 표시되지 않도록 함.
+
+                removeSuggestions();    // 추천 검색어 모두 삭제
             });
 
             function blurEventListener(event){
-                console.log(event)
-
                 removeSuggestions();    // 추천 검색어 모두 삭제
-                $(this).parent().removeClass('focus');
+                $(this).parent().removeClass('focus');  // form 태그의 focus 클래스를 제거하여 border 제거
             }
 
             searchInputElem.focus(function(){
-                $(this).parent().addClass('focus');
+                $(this).parent().addClass('focus'); // form 태그에 focus 클래스를 추가하여 border 추가
             }).blur(blurEventListener)
 
             function arrowAndEnterKeyPressHandler(event){   // 눌린 방향키에 따라 해당 방향의 추천 검색어를 선택 표시하고, 눌린키가 위 아래 방향키 또는 Enter키 인 경우 true를 반환함.
@@ -234,7 +230,8 @@
 
                 const code = event.originalEvent.code;  // 눌린 키의 code
 
-                suggestionElem.removeClass("selected"); // 기존 선택된 추천 검색어의 선택을 해제
+                suggestionElem.removeClass("selected"); // 기존 선택된 추천 검색어들의 선택을 모두 해제
+
                 if(suggestionElem.length >0){   // 추천 검색어가 있는 경우
                     if(code === "ArrowUp"){    // 위 방향키를 누른 경우
                         selectedSuggestionIndex = (selectedSuggestionIndex - 1) % suggestionNum;    // index를 현재 추천 검색어 위의 추천 검색어의 index로 수정
@@ -245,7 +242,7 @@
                     }
                 }
 
-                if(code === "ArrowDown" || event.key === "ArrowUp" || event.key === "Enter"){
+                if(code === "ArrowDown" || code === "ArrowUp" || code === "Enter"){
                     return true;
                 }
 
@@ -254,20 +251,19 @@
 
             searchInputElem.on("propertyChange keyup paste focus", function(event){  // 입력 받거나 focus가 주어진 경우
                 event.preventDefault();
-                console.log(event)
                 // 한글을 빠르게 입력하거나, 한글을 입력한 후 방향키나 엔터를 눌렀을 때 keyup 이벤트가 추가적으로 발생하는 문제가 생겨서, INPUT_EVENT_MIN_INTERVAL 이후 발생하는 이벤트만 처리함.
                 const curTimeStamp = new Date().getTime();  // 현재 이벤트 발생 시간
 
-                if(lastKeyEvent + INPUT_EVENT_MIN_INTERVAL > curTimeStamp){    // 가장 최근에 발생한 이벤트의 시간 + 제한 시간 이내에 이벤트가 발생한 경우에는, 처리하지 않음.
-                    lastKeyEvent = new Date().getTime();    // 가장 최근에 발생한 이벤트의 timestamp
+                if(lastKeyEvent + INPUT_EVENT_MIN_INTERVAL > curTimeStamp){    // (가장 최근에 발생한 이벤트의 시간 + 제한 시간) 이내에 이벤트가 발생한 경우에는, 처리하지 않음.
+                    lastKeyEvent = new Date().getTime();    // 가장 최근에 발생한 이벤트의 timestamp 갱신
                     return;
                 }
 
-                lastKeyEvent = new Date().getTime();    // 가장 최근에 발생한 이벤트의 timestamp
+                lastKeyEvent = new Date().getTime();    // 가장 최근에 발생한 이벤트의 timestamp 갱신
 
-                const isArrayOrEnter = arrowAndEnterKeyPressHandler(event);
+                const isArrowOrEnter = arrowAndEnterKeyPressHandler(event);
 
-                if(isArrayOrEnter === true) // 눌린 키가 위 아래 방향키 또는 Enter키 인 경우 이벤트 리스너 종료.
+                if(isArrowOrEnter === true) // 눌린 키가 위 아래 방향키 또는 Enter키 인 경우 이벤트 리스너 종료.
                     return;
 
                 const target = event.target;    // event가 발생한 대상
@@ -280,15 +276,16 @@
                         url : url,
                         type : "GET",
                         success : function(response){
-                            const jsonResponse = JSON.parse(response);
+                            const jsonResponse = JSON.parse(response);  // response를 json 형식으로 변환
                             const suggestions = jsonResponse.documents;
+
                             removeSuggestions();    // 추천 검색어 모두 삭제
                             selectedSuggestionIndex = 0;    // 선택된 추천 검색어의 index
 
                             if(suggestions !== undefined && suggestions.length > 0){
                                 searchFormElem.css( "padding-bottom", "10px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
 
-                                for(let suggestion of suggestions){
+                                for(let suggestion of suggestions){ // 추천 검색어 container에 각각의 추천 검색어를 append
                                     suggestionsElem.append(`<div class = "search-form__suggestion">
                                                            <i class="fas fa-map-marker-alt suggestion_marker"></i>
                                                            <span class = "suggestion__title">${suggestion.place_name}</span>
@@ -298,18 +295,23 @@
                                                            <input type="hidden" name = "y" value = "${suggestion.y}">
                                                        </div>`)
                                 }
-                                const suggestionElem = $(".search-form__suggestion");   // 추천 검색어 select
+                                const suggestionElems = document.querySelectorAll('.search-form__suggestion')   // 모든 추천 검색어 선택
 
-                                suggestionElem.hover(() => {
-                                    searchInputElem.off("blur")
-                                }, () => {
-                                    searchInputElem.on("blur", blurEventListener)
-                                })
+                                for(let suggestionElem of suggestionElems){ // 각각의 추천 검색어 요소에 대해 click, mouseenter, mouseleave 이벤트 핸들러를 등록한다.
+                                    suggestionElem.addEventListener("mouseenter", (event) => {  // jquery의 on 메서드를 사용했을 때, mouseenter, mouseleave 이벤트가 자식 요소에도 발생하는 문제가 생겨서, document를 사용하여 이벤트 핸들러를 등록함.
+                                        suggestionElem.classList.add("selected")    // 해당 추천 검색어에 마우스가 올라오면 해당 요소에 selected class를 추가해서 선택 표시를 해준다.
+                                        searchInputElem.off("blur") // 추천 검색어를 클릭했을 때, searchInputElem의 blur 이벤트 핸들러가 동작하고, 추천 검색어가 모두 제거 되어, 추천 검색어의 click 이벤트 핸들러가 동작하지 않는 문제가 발생하여 추천 검색어에 마우스가 올라왔을 때에는 , searchInputElem의 blur 이벤트 핸들러를 잠시 제거한다.
+                                    })
 
-                                suggestionElem.on("click", ()=>{
-                                    searchFormElem.submit();
-                                })
+                                    suggestionElem.addEventListener("mouseenter", (event) => {
+                                        suggestionElem.classList.remove("selected") // 해당 추천 검색어에서 마우스가 벗어나면 해당 요소에 selected class를 제거해서 선택 해제 표시를 해준다.
+                                        searchInputElem.on("blur", blurEventListener)   // 해당 추천 검색어에서 마우스가 벗어나면, 제거했던 searchInputElem의 blur 이벤트 핸들러를 다시 등록한다.
+                                    })
 
+                                    suggestionElem.addEventListener("click", ()=>{  // 추천 검색어를 클릭한 경우, submit 하여 해당 위치로 이동한다.
+                                        searchFormElem.submit();
+                                    })
+                                }
                             }else{
                                 removeSuggestions();    // 추천 검색어 모두 삭제
                             }
