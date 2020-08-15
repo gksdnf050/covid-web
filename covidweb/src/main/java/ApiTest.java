@@ -1,8 +1,8 @@
 import com.covid.web.dto.ApiResponseDto;
+import org.json.JSONObject;
+import org.json.XML;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -26,8 +26,12 @@ public class ApiTest {
         System.out.println("Response code: " + conn.getResponseCode());
 
         ApiResponseDto apiResponseDto = getResultByResponse(conn);
-        System.out.println("ResponseCode" + apiResponseDto.getCode());
-        System.out.println("ResponseResult" + apiResponseDto.getResult());
+        //System.out.println("ResponseCode" + apiResponseDto.getCode());
+        //System.out.println("ResponseResult" + apiResponseDto.getResult());
+
+        JSONObject xmlJSONObj = XML.toJSONObject(apiResponseDto.getResult());
+        String jsonPrettyPrintString = xmlJSONObj.toString(4);
+        System.out.println(jsonPrettyPrintString);
     }
     public static void main(String[] args) throws IOException {
         testHospital();

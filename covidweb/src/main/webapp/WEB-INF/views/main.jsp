@@ -68,6 +68,10 @@
                 padding : 12px 5px 5px 5px; /* 추천 검색어 사이의 간격 */
             }
 
+            .search-form__suggestion:hover{
+                background: #eef7ff;
+            }
+
             .suggestion__category{
                 float:right /* 오른쪽 끝에 붙어 있게 함. */
             }
@@ -168,31 +172,38 @@
             const searchFormElem = $(".search-form");
             const searchInputElem = $('.search-form__search-input');
             const suggestionsElem = $(".search-form__suggestions");
-            const clearButton = $(".search-form__clear-button");
+            const clearButtonElem = $(".search-form__clear-button");
+            const mapElem = $("#map");
 
-            const KEY_EVENT_MIN_INTERVAL = 10;   // keyup 이벤트 발생 최소 간격
+            const HOVER_TIMEOUT = 5;
+            const INPUT_EVENT_MIN_INTERVAL = 10;   // input 태그의 이벤트 발생 최소 간격
             let lastKeyEvent = 0;   // 가장 최근에 발생한 이벤트의 timestamp
 
             let selectedSuggestionIndex = 0;    // 선택된 추천 검색어의 index
 
             function removeSuggestions(){   // 모든 추천 검색어 삭제
                 const suggestionElem = $(".search-form__suggestion");
+                searchFormElem.css( "padding-bottom", "0px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
+
                 suggestionElem.remove(); // 기존 검색어 추천 삭제
             }
 
-            clearButton.on("click", () => {
+            mapElem.on("click", () => { // 맵 클릭 시
+                searchInputElem.blur(); // searchInput의 focus 제거
+            })
+
+            clearButtonElem.on("click", () => {
                 searchInputElem.val("");    // input 태그에 입력된 값 지움.
                 removeSuggestions();    // 추천 검색어 모두 삭제
-                searchFormElem.css( "padding-bottom", "0px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
             })
 
             searchFormElem.submit(function(event) {
                 event.preventDefault(); // 기본 리스너 동작 제거
 
                 let selectElem = $(".selected") // 추천 검색어들 중 선택된 검색어
+                const suggestionElem = $(".search-form__suggestion");   // 추천 검색어 모두 선택
 
                 if(selectElem.length === 0){    // 선택된 검색어가 없는 경우
-                    const suggestionElem = $(".search-form__suggestion");   // 추천 검색어 모두 선택
                     selectElem = suggestionElem.eq(0);  // 추천 검색어들 중 첫번째 추천 검색어 선택
                 }
 
@@ -203,23 +214,25 @@
                 const y = yCoordinateELem.val();    // y 좌표
 
                 map.setCenter(new naver.maps.LatLng(y, x))  // map 이동
-                clearButton.click();    // input 태그 내용 삭제 및 추천 검색어 삭제
+                clearButtonElem.click();    // input 태그 내용 삭제 및 추천 검색어 삭제
             });
+
+            function blurEventListener(event){
+                console.log(event)
+
+                removeSuggestions();    // 추천 검색어 모두 삭제
+                $(this).parent().removeClass('focus');
+            }
 
             searchInputElem.focus(function(){
                 $(this).parent().addClass('focus');
-            }).blur(function(){
-                searchFormElem.css( "padding-bottom", "0px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
-                removeSuggestions();    // 추천 검색어 모두 삭제
-
-                $(this).parent().removeClass('focus');
-            })
+            }).blur(blurEventListener)
 
             function arrowAndEnterKeyPressHandler(event){   // 눌린 방향키에 따라 해당 방향의 추천 검색어를 선택 표시하고, 눌린키가 위 아래 방향키 또는 Enter키 인 경우 true를 반환함.
                 const suggestionElem = $(".search-form__suggestion");   // 추천 검색어 select
                 const suggestionNum = suggestionElem.length;    // 현재 추천 검색어의 개수
 
-                const code = event.originalEvent.code;
+                const code = event.originalEvent.code;  // 눌린 키의 code
 
                 suggestionElem.removeClass("selected"); // 기존 선택된 추천 검색어의 선택을 해제
                 if(suggestionElem.length >0){   // 추천 검색어가 있는 경우
@@ -230,10 +243,10 @@
                         selectedSuggestionIndex = (selectedSuggestionIndex + 1) % suggestionNum;    // index를 현재 추천 검색어 아래의 추천 검색어의 index로 수정
                         suggestionElem.eq(selectedSuggestionIndex-1).addClass("selected");  // 헤당 추천 검색어를 선택 표시
                     }
+                }
 
-                    if(code === "ArrowDown" || event.key === "ArrowUp" || event.key === "Enter"){
-                        return true;
-                    }
+                if(code === "ArrowDown" || event.key === "ArrowUp" || event.key === "Enter"){
+                    return true;
                 }
 
                 return false;
@@ -241,11 +254,11 @@
 
             searchInputElem.on("propertyChange keyup paste focus", function(event){  // 입력 받거나 focus가 주어진 경우
                 event.preventDefault();
-
-                // 한글을 빠르게 입력하거나, 한글을 입력한 후 방향키나 엔터를 눌렀을 때 keyup 이벤트가 추가적으로 발생하는 문제가 생겨서, KEY_EVENT_MIN_INTERVAL 이후 발생하는 이벤트만 처리함.
+                console.log(event)
+                // 한글을 빠르게 입력하거나, 한글을 입력한 후 방향키나 엔터를 눌렀을 때 keyup 이벤트가 추가적으로 발생하는 문제가 생겨서, INPUT_EVENT_MIN_INTERVAL 이후 발생하는 이벤트만 처리함.
                 const curTimeStamp = new Date().getTime();  // 현재 이벤트 발생 시간
 
-                if(lastKeyEvent + KEY_EVENT_MIN_INTERVAL > curTimeStamp){    // 가장 최근에 발생한 keyup 이벤트의 시간 + 제한 시간 이내에 keyup 이벤트가 발생한 경우에는, 처리하지 않음.
+                if(lastKeyEvent + INPUT_EVENT_MIN_INTERVAL > curTimeStamp){    // 가장 최근에 발생한 이벤트의 시간 + 제한 시간 이내에 이벤트가 발생한 경우에는, 처리하지 않음.
                     lastKeyEvent = new Date().getTime();    // 가장 최근에 발생한 이벤트의 timestamp
                     return;
                 }
@@ -254,7 +267,7 @@
 
                 const isArrayOrEnter = arrowAndEnterKeyPressHandler(event);
 
-                if(isArrayOrEnter === true)
+                if(isArrayOrEnter === true) // 눌린 키가 위 아래 방향키 또는 Enter키 인 경우 이벤트 리스너 종료.
                     return;
 
                 const target = event.target;    // event가 발생한 대상
@@ -272,8 +285,7 @@
                             removeSuggestions();    // 추천 검색어 모두 삭제
                             selectedSuggestionIndex = 0;    // 선택된 추천 검색어의 index
 
-                            if(suggestions !== undefined &&  suggestions.length > 0){   // 속도 제한을 초과해서 서버에서 errorCode를 반환하는 경우 items가 없음.
-
+                            if(suggestions !== undefined && suggestions.length > 0){
                                 searchFormElem.css( "padding-bottom", "10px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
 
                                 for(let suggestion of suggestions){
@@ -286,8 +298,20 @@
                                                            <input type="hidden" name = "y" value = "${suggestion.y}">
                                                        </div>`)
                                 }
+                                const suggestionElem = $(".search-form__suggestion");   // 추천 검색어 select
+
+                                suggestionElem.hover(() => {
+                                    searchInputElem.off("blur")
+                                }, () => {
+                                    searchInputElem.on("blur", blurEventListener)
+                                })
+
+                                suggestionElem.on("click", ()=>{
+                                    searchFormElem.submit();
+                                })
+
                             }else{
-                                searchFormElem.css( "padding-bottom", "0px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
+                                removeSuggestions();    // 추천 검색어 모두 삭제
                             }
                         },
                         error : function(req, status, error){
@@ -297,7 +321,6 @@
                     })
                 }else{  // 입력된 검색어가 없는 경우
                     removeSuggestions();    // 추천 검색어 모두 삭제
-                    searchFormElem.css( "padding-bottom", "0px"); // 추천 검색어가 있으면 padding-bottom을 주어서 둥근 테두리가 보이도록 하고, 없으면 제거함.
                 }
             })
             var mapOptions = {
