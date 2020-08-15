@@ -1,6 +1,8 @@
 package com.covid.web.controller;
 
 import com.covid.web.dto.ApiResponseDto;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,11 +18,14 @@ import static com.covid.web.util.ApiUtil.getResultByResponse;
 import static org.yaml.snakeyaml.util.UriEncoder.encode;
 
 @RestController
+@PropertySource("classpath:application.properties")
 public class SearchController {
+    @Value("${open-api.key.kakao-rest-api-key}")
+    String kakaoRestApiKey; // 애플리케이션 클라이언트 아이디값";
+
     @GetMapping("/search")
     public String localSearch(@RequestParam(name = "query", required = true) String query) throws IOException {
         final int SIZE = 10; // 검색 결과 출력 건수 지정
-        String kakaoRestApiKey = "KakaoAK c87e4cd89b45fefccbcad126e1cf38a5"; // 애플리케이션 클라이언트 아이디값";
 
         String apiURL = "https://dapi.kakao.com/v2/local/search/keyword.json" + "?size=" + SIZE + "&query=" + encode(query);
         URL url = new URL(apiURL);

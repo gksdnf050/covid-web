@@ -19,6 +19,13 @@
     </properties>
 
     <dependencies>
+        <!-- https://docs.spring.io/spring-boot/docs/2.3.2.RELEASE/reference/html/appendix-configuration-metadata.html#configuration-metadata-annotation-processor 참고 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
