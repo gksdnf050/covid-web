@@ -19,19 +19,16 @@ import static org.yaml.snakeyaml.util.UriEncoder.encode;
 public class SearchController {
     @GetMapping("/search")
     public String localSearch(@RequestParam(name = "query", required = true) String query) throws IOException {
-        System.out.println("query" + query);
-        final String DISPLAY = "5"; // 검색 결과 출력 건수 지정
-        String CLIENT_ID = "ZtE5ipgXNtqEqTsmTiqO";//애플리케이션 클라이언트 아이디값";
-        String CLIENT_SECRET= "3qAG0NeIGF";//애플리케이션 클라이언트 시크릿값";
+        final int SIZE = 10; // 검색 결과 출력 건수 지정
+        String kakaoRestApiKey = ""; // 애플리케이션 클라이언트 아이디값";
 
-        String apiURL = "https://openapi.naver.com/v1/search/local.json" + "?display=" + DISPLAY + "&query=" + encode(query);
+        String apiURL = "https://dapi.kakao.com/v2/local/search/keyword.json" + "?size=" + SIZE + "&query=" + encode(query);
         URL url = new URL(apiURL);
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
-        conn.setRequestProperty("X-Naver-Client-Id", CLIENT_ID);
-        conn.setRequestProperty("X-Naver-Client-Secret", CLIENT_SECRET);
+        conn.setRequestProperty("Authorization", kakaoRestApiKey);
 
         ApiResponseDto apiResponseDto = getResultByResponse(conn);
         System.out.println("ResponseCode" + apiResponseDto.getCode());
