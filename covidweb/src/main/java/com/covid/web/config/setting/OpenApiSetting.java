@@ -9,6 +9,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class OpenApiSetting {
     private String kakaoRestApiKey;
-    private String hospitalApiKey;
-    private String restaurantApiKey;
+
+    private String covidHospitalApiKey;
+    private String covidRestaurantApiKey;
+
+    private String naverApiClientId;
+    private String naverApiClientSecret;
 }
