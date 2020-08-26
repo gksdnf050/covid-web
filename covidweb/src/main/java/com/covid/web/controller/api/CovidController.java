@@ -1,7 +1,9 @@
 package com.covid.web.controller.api;
 
-import com.covid.web.dto.ApiResponseDto;
-import com.covid.web.util.ApiUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import com.covid.web.dto.ApiResponseDto;
+import com.covid.web.util.ApiUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -39,14 +41,16 @@ public class CovidController {
 
 
     @GetMapping("/restaurant")
-    public String getCovidRestaurant(@RequestParam("start") String startIndex, @RequestParam("end") String endIndex) throws IOException {
+    public ArrayList getCovidRestaurant(@RequestParam("start") String startIndex, @RequestParam("end") String endIndex) throws IOException {
         ApiUtil apiUtil = new ApiUtil();
         ApiResponseDto apiResponseDto = apiUtil.covidRestaurant(covidRestaurantApiKey, startIndex, endIndex);
 
         int responseCode = apiResponseDto.getCode();
         String responseResult = apiResponseDto.getResult();
 
-        return responseResult;
+        Map temp = (Map) apiUtil.parseStringToMap(responseResult).get("Grid_20200713000000000605_1");
+       
+        return (ArrayList) temp.get("row");
     }
 
 }
