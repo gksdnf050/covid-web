@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class AddressSearchController {
-    @Autowired
+/*    @Autowired
     private ApiUtil apiUtil;
 
     @GetMapping("/instantSearch")
@@ -43,5 +43,5 @@ public class AddressSearchController {
         String responseResult = apiResponseDto.getResult();
 
         return responseResult;
-    }
+    } */
 }

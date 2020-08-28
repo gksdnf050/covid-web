@@ -2,6 +2,11 @@ package com.covid.web.dto;
 
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class RestaurantDto {
 
 	int id;
@@ -18,9 +23,10 @@ public class RestaurantDto {
 	Date reg_date; 
 	Date cancel_date; 
 	Date update_date; 
-	int seq; 
+	Long seq; 
 	String add1; 
-	String add2; 
+	String add2;
 	String x; 
-	String y; 
+	String y;
+	
 }

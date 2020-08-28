@@ -11,7 +11,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.post.api.mapper")
+@MapperScan(basePackages = "com.covid.web.mapper")
 public class DBConfiguration {
 	@Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
@@ -20,7 +20,7 @@ public class DBConfiguration {
 
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis-config.xml"));
-        //sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
         return sessionFactory.getObject();
     }
 
