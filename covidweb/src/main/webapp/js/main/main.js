@@ -25,24 +25,83 @@ function filterAgencyName(agencyName){
     return agencyName;
 }
 
-function initializer(mode){
-    /*if(mode != "hospital"){
-        const requestSize = 1000;
-        let startIndex = 1;
-        let endIndex = 1000;
+function addressToPointOnSuccess(response, contentString){
+    try{
+        const jsonResponse = JSON.parse(response);  // response를 json 형식으로 변환
+        const x = jsonResponse.documents[0].x;
+        const y = jsonResponse.documents[0].y;
 
-        let curRestaurantCnt = 0;
+        const marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(y, x),
+            map: map
+        });
 
-        $.ajax({
-            type : "GET",
-            url : `/api/restaurant?start=${startIndex}&end=${endIndex}`,
-            success : function (response) {
-                const jsonResponse = JSON.parse(response);  // response를 json 형식으로 변환
-                console.log(jsonResponse)
+        const infowindow = new naver.maps.InfoWindow({
+            content: contentString
+        });
+
+        naver.maps.Event.addListener(marker, "click", function(e) {
+            if (infowindow.getMap()) {
+                infowindow.close();
+            } else {
+                infowindow.open(map, marker);
             }
-        })
-    }*/
-    if(mode != "restaurant"){
+        });
+    }catch(err){
+        console.log(response)
+    }
+}
+
+async function initializer(mode){
+    if(mode !== "hospital"){
+        const requestSize = 1000;
+        let startIndex = 1, endIndex = 1000;
+
+        let isEnd = false;
+
+        while(!isEnd){
+            let itemLength;
+            await new Promise (function(resolve, reject){
+                $.ajax({
+                    type : "GET",
+                    url : `/api/restaurant?start=${startIndex}&end=${endIndex}`,
+                    success : function (items) {
+                        itemLength = items.length;
+
+                        for(let item of items){
+                            const si = item.RELAX_SI_NM;
+                            const sido = item.RELAX_SIDO_NM;
+                            const restntNm = item.RELAX_RSTRNT_NM;
+
+                            const query = `${si} ${sido} ${restntNm}`;
+                            const contentString = "";
+
+                            $.ajax({
+                                type : "GET",
+                                url : `/api/addressToPoint?query=${encodeURIComponent(query)}`,
+                                success : function(response){
+                                    addressToPointOnSuccess(response, contentString);
+                                },
+                                error : function(){
+                                    alert("주소 변환 실패!")
+                                }
+                            })
+                        }
+                        resolve();
+                    },
+                    error : function(){
+                        alert("안심식당 정보를 로드하는데 실패하였습니다.")
+                    }
+                })
+            })
+            startIndex += requestSize, endIndex += requestSize;
+            if(itemLength < requestSize)
+                isEnd = true;
+        }
+
+    }
+/*
+    if(mode !== "restaurant"){
         $.ajax({
             type : "get",
             url : "/api/hospital",
@@ -51,49 +110,27 @@ function initializer(mode){
                 const items = jsonResponse.response.body.items.item;
 
                 for(let item of items){
-                    agencyName = filterAgencyName(item.yadmNm);
+                    const agencyName = filterAgencyName(item.yadmNm);
                     const query = `${item.sidoNm} ${item.sgguNm} ${agencyName}`
+
+                    let contentString = [
+                        `<div class = 'hospital-info'>`,
+                        `<strong>시도명 : </strong>${item.sidoNm}</br>`,
+                        `<strong>시군구명 : </strong>${item.sgguNm}</br>`,
+                        `<strong>전화번호 : </strong>${item.telno}</br>`,
+                        `<strong>운영가능일자 : </strong>${item.adtFrDd}</br>`,
+                        `<strong>구분코드 : </strong>${item.spclAdmTyCd} <i class="far fa-question-circle" title = "A0: 국민안심병원/97: 코로나검사 실시기관/99: 코로나 선별진료소 운영기관"></i></br> `,
+                        `</div>`,
+                    ].join("");
+
+                    if(item.hospTyTpCd !== undefined)
+                        contentString += `<strong>선정유형 : </strong>${item.hospTyTpCd} <i class="far fa-question-circle" title = "국민안심병원 선정유형(A: 호흡기 전용 외래 진료소 분리 운영/B: 유형A+선별진료소, 호흡기병동 등 입원실까지 운영)"></i></br>`;
+
                     $.ajax({
                         type : "GET",
-                        url : `/api/addressToPoint?query=${query}`,
+                        url : `/api/addressToPoint?query=${encodeURIComponent(query)}`,
                         success : function(response){
-                            try{
-                                const jsonResponse = JSON.parse(response);  // response를 json 형식으로 변환
-                                const x = jsonResponse.documents[0].x;
-                                const y = jsonResponse.documents[0].y;
-
-                                const marker = new naver.maps.Marker({
-                                    position: new naver.maps.LatLng(y, x),
-                                    map: map
-                                });
-
-                                let contentString = [
-                                    `<div class = 'hospital-info'>`,
-                                    `<strong>시도명 : </strong>${item.sidoNm}</br>`,
-                                    `<strong>시군구명 : </strong>${item.sgguNm}</br>`,
-                                    `<strong>전화번호 : </strong>${item.telno}</br>`,
-                                    `<strong>운영가능일자 : </strong>${item.adtFrDd}</br>`,
-                                    `<strong>구분코드 : </strong>${item.spclAdmTyCd} <i class="far fa-question-circle" title = "A0: 국민안심병원/97: 코로나검사 실시기관/99: 코로나 선별진료소 운영기관"></i></br> `,
-                                    `</div>`,
-                                ].join("");
-
-                                if(item.hospTyTpCd !== undefined)
-                                    contentString += `<strong>선정유형 : </strong>${item.hospTyTpCd} <i class="far fa-question-circle" title = "국민안심병원 선정유형(A: 호흡기 전용 외래 진료소 분리 운영/B: 유형A+선별진료소, 호흡기병동 등 입원실까지 운영)"></i></br>`;
-
-                                const infowindow = new naver.maps.InfoWindow({
-                                    content: contentString
-                                });
-
-                                naver.maps.Event.addListener(marker, "click", function(e) {
-                                    if (infowindow.getMap()) {
-                                        infowindow.close();
-                                    } else {
-                                        infowindow.open(map, marker);
-                                    }
-                                });
-                            }catch(err){
-                                console.log(`${item.sidoNm} ${item.sgguNm} ${item.yadmNm}`)
-                            }
+                            addressToPointOnSuccess(response, contentString);
                         },
                         error : function(){
                             alert("주소 변환 실패!")
@@ -101,10 +138,11 @@ function initializer(mode){
                     })
                 }
             }, error : function(){
-                alert("정보를 로드하는데 실패하였습니다.")
+                alert("안심병원 정보를 로드하는데 실패하였습니다.")
             }
         })
     }
+ */
 };
 
 function removeSuggestions(){   // 모든 추천 검색어 삭제
@@ -201,8 +239,8 @@ searchInputElem.on("propertyChange keyup paste focus", function(event){  // 입�
     const target = event.target;    // event가 발생한 대상
     const query = target.value; // input 태그에 입력된 검색어
 
-    if(query != ""){    // 검색어가 있을 경우에만 서버에 추천 검색어 요청
-        const url = `/api/instantSearch?query=${query}`;
+    if(query !== ""){    // 검색어가 있을 경우에만 서버에 추천 검색어 요청
+        const url = `/api/instantSearch?query=${encodeURIComponent(query)}`;
 
         $.ajax({
             url : url,
