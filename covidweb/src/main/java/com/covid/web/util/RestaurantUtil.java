@@ -30,64 +30,73 @@ public class RestaurantUtil {
 
 	@Autowired
 	private KakaoUtil kakaoUtil;
-	
+
 	@Autowired
-    CovidMapper covidMapper;
+	CovidMapper covidMapper;
 
 	public void getCovidRestaurant() throws Exception {
-		int startIndex = 1, endIndex = 1000;
+		int requestSize = 1000;
+		int startIndex = 1;
+		int endIndex = 1000;
+		boolean isEnd = false;
+		while (!isEnd) {
+			ApiResponseDto apiResponseDto = covidRestaurant(Integer.toString(startIndex), Integer.toString(endIndex));
+			// int responseCode = apiResponseDto.getCode();
+			String responseResult = apiResponseDto.getResult();
 
-		ApiResponseDto apiResponseDto = covidRestaurant("1", "2");
-		// int responseCode = apiResponseDto.getCode();
-		String responseResult = apiResponseDto.getResult();
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(responseResult);
+			JSONObject jsonObj = (JSONObject) obj;
+			JSONObject jsonObj2 = (JSONObject) jsonObj.get("Grid_20200713000000000605_1");
+			JSONArray parse_itemlist = (JSONArray) jsonObj2.get("row");
 
-		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(responseResult);
-		JSONObject jsonObj = (JSONObject) obj;
-		JSONObject jsonObj2 = (JSONObject) jsonObj.get("Grid_20200713000000000605_1");
-		JSONArray parse_itemlist = (JSONArray) jsonObj2.get("row");
+			for (int i = 0; i < parse_itemlist.size(); i++) {
+				JSONObject imsi = (JSONObject) parse_itemlist.get(i);
 
-		for (int i = 0; i < parse_itemlist.size(); i++) {
-			JSONObject imsi = (JSONObject) parse_itemlist.get(i);
+				RestaurantDto dto = new RestaurantDto();
+				dto.setRestaurant((String) imsi.get("RELAX_RSTRNT_NM"));
+				dto.setRepresentative((String) imsi.get("RELAX_RSTRNT_REPRESENT"));
+				dto.setZipcode((String) imsi.get("RELAX_ZIPCODE"));
+				dto.setSido((String) imsi.get("RELAX_SI_NM"));
+				dto.setSggu((String) imsi.get("RELAX_SIDO_NM"));
+				dto.setCategory((String) imsi.get("RELAX_GUBUN"));
+				dto.setCategory_detail((String) imsi.get("RELAX_GUBUN_DETAIL"));
+				dto.setTel((String) imsi.get("RELAX_RSTRNT_TEL"));
+				dto.setEtc((String) imsi.get("RELAX_RSTRNT_ETC"));
+				dto.setSelected((String) imsi.get("RELAX_USE_YN"));
+				dto.setReg_date((Date) imsi.get("RELAX_RSTRNT_REG_DT"));
+				dto.setCancel_date((Date) imsi.get("RELAX_RSTRNT_CNCL_DT"));
+				dto.setUpdate_date((Date) imsi.get("RELAX_UPDATE_DT"));
+				dto.setSeq((Long) imsi.get("RELAX_SEQ"));
+				dto.setAdd1((String) imsi.get("RELAX_ADD1"));
+				dto.setAdd2((String) imsi.get("RELAX_ADD2"));
 
-			RestaurantDto dto = new RestaurantDto();
-			dto.setRestaurant((String) imsi.get("RELAX_RSTRNT_NM"));
-			dto.setRepresentative((String) imsi.get("RELAX_RSTRNT_REPRESENT"));
-			dto.setZipcode((String) imsi.get("RELAX_ZIPCODE"));
-			dto.setSido((String) imsi.get("RELAX_SI_NM"));
-			dto.setSggu((String) imsi.get("RELAX_SIDO_NM"));
-			dto.setCategory((String) imsi.get("RELAX_GUBUN"));
-			dto.setCategory_detail((String) imsi.get("RELAX_GUBUN_DETAIL"));
-			dto.setTel((String) imsi.get("RELAX_RSTRNT_TEL"));
-			dto.setEtc((String) imsi.get("RELAX_RSTRNT_ETC"));
-			dto.setSelected((String) imsi.get("RELAX_USE_YN"));
-			dto.setReg_date((Date) imsi.get("RELAX_RSTRNT_REG_DT"));
-			dto.setCancel_date((Date) imsi.get("RELAX_RSTRNT_CNCL_DT"));
-			dto.setUpdate_date((Date) imsi.get("RELAX_UPDATE_DT"));
-			dto.setSeq((Long) imsi.get("RELAX_SEQ"));
-			dto.setAdd1((String) imsi.get("RELAX_ADD1"));
-			dto.setAdd2((String) imsi.get("RELAX_ADD2"));
+				String query = (String) imsi.get("RELAX_SI_NM") + " " + (String) imsi.get("RELAX_SIDO_NM") + " "
+						+ (String) imsi.get("RELAX_RSTRNT_NM");
+				ApiResponseDto apiDto = kakaoUtil.KakaolocalSearchApi(query, "1");
+				String resResult = apiDto.getResult();
 
-			String query = (String) imsi.get("RELAX_SI_NM") + " " + (String) imsi.get("RELAX_SIDO_NM") + " "
-					+ (String) imsi.get("RELAX_RSTRNT_NM");
-			ApiResponseDto apiDto = kakaoUtil.KakaolocalSearchApi(query, "1");
-			String resResult = apiDto.getResult();
+				Object oj = parser.parse(resResult);
+				JSONObject jsoObj = (JSONObject) oj;
+				JSONArray arr = (JSONArray) jsoObj.get("documents");
+				if (arr.size() > 0) {
+					JSONObject ob = (JSONObject) arr.get(0);
 
-			Object oj = parser.parse(resResult);
-			JSONObject jsoObj = (JSONObject) oj;
-			JSONArray arr = (JSONArray) jsoObj.get("documents");
-			if (arr.size() > 0) {
-				JSONObject ob = (JSONObject) arr.get(0);
+					dto.setX((String) ob.get("x"));
+					dto.setY((String) ob.get("y"));
+				} else {
+					dto.setX("");
+					dto.setY("");
+				}
 
-				dto.setX((String) ob.get("x"));
-				dto.setY((String) ob.get("y"));
-			} else {
-				dto.setX("");
-				dto.setY("");
+				// covidMapper.insertRestaurant(dto);
+
 			}
-			
-			covidMapper.insertRestaurant(dto);
 
+			startIndex += requestSize;
+			endIndex += requestSize;
+			if (parse_itemlist.size() < requestSize)
+				isEnd = true;
 		}
 
 	}
