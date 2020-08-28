@@ -2,6 +2,8 @@ package com.covid.web.controller.api;
 
 import com.covid.web.dto.ApiResponseDto;
 import com.covid.web.util.ApiUtil;
+import com.covid.web.util.RestaurantUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -19,7 +21,8 @@ import java.util.Map;
 public class CovidController {
     @Autowired
     private ApiUtil apiUtil;
-
+    @Autowired
+    RestaurantUtil u;
     @GetMapping("/hospital")
     public String getAllCovidHospital() throws IOException {
         String pageNo = "1";
@@ -43,6 +46,12 @@ public class CovidController {
 
         Map temp = (Map) apiUtil.parseStringToMap(responseResult).get("Grid_20200713000000000605_1");
        
+        try {
+			u.getCovidRestaurant();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return (ArrayList) temp.get("row");
     }
 
