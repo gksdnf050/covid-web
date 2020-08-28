@@ -5,6 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.json.XML;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +18,19 @@ import java.util.Map;
 
 import static org.yaml.snakeyaml.util.UriEncoder.encode;
 
+@Component
+@PropertySource("classpath:application.properties")
 public class ApiUtil {
+    @Value("${open-api.key.covid-restaurant-api-key}")
+    private String covidRestaurantApiKey;
+
+    @Value("${open-api.key.covid-hospital-api-key}")
+    private String covidHospitalApiKey; // 애플리케이션 클라이언트 아이디값";
+
+    @Value("${open-api.key.kakao-rest-api-key}")
+    private String kakaoRestApiKey;
+
+
     public ApiResponseDto getResultByResponse(HttpURLConnection conn) throws IOException {
         BufferedReader bufferedReader;
 
@@ -44,7 +59,7 @@ public class ApiUtil {
         return new ObjectMapper().readValue(jsonStr, Map.class);
     }
 
-    public ApiResponseDto KakaolocalSearchApi(String kakaoRestApiKey, String query, String size) throws IOException{
+    public ApiResponseDto KakaolocalSearchApi(String query, String size) throws IOException{
         StringBuilder apiURL = new StringBuilder("https://dapi.kakao.com/v2/local/search/keyword.json");
         apiURL.append("?size=" + size);
         apiURL.append("&query=" + encode(query));
@@ -59,7 +74,7 @@ public class ApiUtil {
         return getResultByResponse(conn);
     }
 
-    public ApiResponseDto covidHospital(String covidHospitalApiKey, String pageNo, String numOfRows, String spclAdmTyCd) throws IOException {
+    public ApiResponseDto covidHospital(String pageNo, String numOfRows, String spclAdmTyCd) throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B551182/pubReliefHospService/getpubReliefHospList"); /*URL*/
         urlBuilder.append("?" + encode("ServiceKey") + "=" + covidHospitalApiKey); /*Service Key*/
         urlBuilder.append("&" + encode("pageNo") + "=" + encode(pageNo)); /*페이지번호*/
@@ -83,7 +98,7 @@ public class ApiUtil {
         return apiResponseDto;
     }
 
-    public ApiResponseDto covidRestaurant(String covidRestaurantApiKey, String startIndex, String endIndex) throws IOException {
+    public ApiResponseDto covidRestaurant(String startIndex, String endIndex) throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://211.237.50.150:7080/openapi"); /*URL*/
         urlBuilder.append("/" + encode(covidRestaurantApiKey));
         urlBuilder.append("/" + encode("json"));
