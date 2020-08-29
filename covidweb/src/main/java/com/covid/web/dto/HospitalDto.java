@@ -1,26 +1,36 @@
 package com.covid.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
 public class HospitalDto {
-    private int id;
-    private String hospital;
-    private String sido;
-    private String sggu;
-    private String selectionType;
-    private String tel;
-    private String typeCode;
-    private String x;
-    private String y;
+    private String hospital;    // 기관명
+    private String sido;    // 시도명
+    private String sggu;    // 시군구명
+    private String selectionType;   // 선정유형
+    private String tel; // 전화번호
+    private String typeCode;    // 구분 코드
+    private String x;   // x좌표
+    private String y;   // y좌표
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private Date operableDate;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private Date operableDate;  // 운영가능일자
+
+    public HospitalDto(String hospital, String sido, String sggu, String selectionType, String tel, String typeCode, String x, String y, Date operableDate) {
+        this.hospital = hospital;
+        this.sido = sido;
+        this.sggu = sggu;
+        this.selectionType = selectionType;
+        this.tel = tel;
+        this.typeCode = typeCode;
+        this.x = x;
+        this.y = y;
+        this.operableDate = operableDate;
+    }
 }

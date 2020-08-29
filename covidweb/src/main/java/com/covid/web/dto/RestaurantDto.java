@@ -8,8 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestaurantDto {
-
-	int id;
 	String restaurant;
 	String representative; 
 	String zipcode; 
@@ -28,5 +26,4 @@ public class RestaurantDto {
 	String add2;
 	String x; 
 	String y;
-	
 }

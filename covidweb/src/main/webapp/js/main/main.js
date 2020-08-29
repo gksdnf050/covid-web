@@ -16,134 +16,103 @@ const mapOptions = {
 
 let map = new naver.maps.Map('map', mapOptions);
 
-function filterAgencyName(agencyName){
-    const filterElementList = ["(의)", "재단", "법인", "대학교", "부속", "교도소", " "]
-    for(let filterElement of filterElementList){
-        agencyName = agencyName.split(filterElement).slice(-1)[0] // 가장 마지막 token
-    }
+function createMaker(contentString, x, y){
+    const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(y, x),
+        map: map
+    });
 
-    return agencyName;
-}
+    const infowindow = new naver.maps.InfoWindow({
+        content: contentString
+    });
 
-function addressToPointOnSuccess(response, contentString){
-    try{
-        const jsonResponse = JSON.parse(response);  // response를 json 형식으로 변환
-        const x = jsonResponse.documents[0].x;
-        const y = jsonResponse.documents[0].y;
-
-        const marker = new naver.maps.Marker({
-            position: new naver.maps.LatLng(y, x),
-            map: map
-        });
-
-        const infowindow = new naver.maps.InfoWindow({
-            content: contentString
-        });
-
-        naver.maps.Event.addListener(marker, "click", function(e) {
-            if (infowindow.getMap()) {
-                infowindow.close();
-            } else {
-                infowindow.open(map, marker);
-            }
-        });
-    }catch(err){
-        console.log(response)
-    }
+    naver.maps.Event.addListener(marker, "click", function(e) {
+        if (infowindow.getMap()) {
+            infowindow.close();
+        } else {
+            infowindow.open(map, marker);
+        }
+    });
 }
 
 async function initializer(mode){
     if(mode !== "hospital"){
-        const requestSize = 1000;
-        let startIndex = 1, endIndex = 1000;
+        $.ajax({
+            type : "GET",
+            url : `/api/restaurant`,
+            success : function (restaurantList) {
+                for(let restaurant of restaurantList){
+                    const x = restaurant.x;
+                    const y = restaurant.y;
 
-        let isEnd = false;
+                    const nullableList = [
+                        {title : "업종상세", value: restaurant.category_detail},
+                        {title : "안심식당 지정일", value : restaurant.reg_date},
+                        {title : "안심식당 취소일", value : restaurant.cancel_date},
+                        {title : "수정일", value : restaurant.update_date}];
 
-        while(!isEnd){
-            let itemLength;
-            await new Promise (function(resolve, reject){
-                $.ajax({
-                    type : "GET",
-                    url : `/api/restaurant?start=${startIndex}&end=${endIndex}`,
-                    success : function (items) {
-                        itemLength = items.length;
+                    let contentString = [
+                        `<div class = "restaurant-info">`+
+                            `<strong>사업자명 : </strong>${restaurant.restaurant}<br>` +
+                            `<strong>대표자명 : </strong>${restaurant.representative}<br>` +
+                            `<strong>시도코드 : </strong>${restaurant.zipcode}<br>` +
+                            `<strong>시도명 : </strong>${restaurant.sido}<br>` +
+                            `<strong>시군구명 : </strong>${restaurant.sggu}<br>` +
+                            `<strong>없종 : </strong>${restaurant.category}<br>` +
+                            `<strong>전화번호 : </strong>${restaurant.tel}<br>` +
+                            `<strong>비고 : </strong>${restaurant.etc}<br>` +
+                            `<strong>선정여부 : </strong>${restaurant.selected}<br>` +
+                            `<strong>안심식당 seq : </strong>${restaurant.seq}<br>` +
+                            `<strong>주소1 : </strong>${restaurant.add1}<br>` +
+                            `<strong>주소2 : </strong>${restaurant.add2}<br>` +
+                        `</div>`
+                    ].join("");
 
-                        for(let item of items){
-                            const si = item.RELAX_SI_NM;
-                            const sido = item.RELAX_SIDO_NM;
-                            const restntNm = item.RELAX_RSTRNT_NM;
-
-                            const query = `${si} ${sido} ${restntNm}`;
-                            const contentString = "";
-
-                            $.ajax({
-                                type : "GET",
-                                url : `/api/addressToPoint?query=${encodeURIComponent(query)}`,
-                                success : function(response){
-                                    addressToPointOnSuccess(response, contentString);
-                                },
-                                error : function(){
-                                    alert("주소 변환 실패!")
-                                }
-                            })
+                    for(let nullable of nullableList){
+                        if(nullable.value !== null){
+                            contentString += `<strong>${nullable.title} : </strong>${nullable.value}<br>`;
                         }
-                        resolve();
-                    },
-                    error : function(){
-                        alert("안심식당 정보를 로드하는데 실패하였습니다.")
                     }
-                })
-            })
-            startIndex += requestSize, endIndex += requestSize;
-            if(itemLength < requestSize)
-                isEnd = true;
-        }
 
+                    createMaker(contentString, x, y)
+                }
+            },
+            error : function(){
+                alert("안심식당 정보를 로드하는데 실패하였습니다.")
+            }
+        })
     }
-/*
+
     if(mode !== "restaurant"){
         $.ajax({
             type : "get",
             url : "/api/hospital",
-            success : function(response){
-                const jsonResponse = JSON.parse(response);  // response를 json 형식으로 변환
-                const items = jsonResponse.response.body.items.item;
-
-                for(let item of items){
-                    const agencyName = filterAgencyName(item.yadmNm);
-                    const query = `${item.sidoNm} ${item.sgguNm} ${agencyName}`
+            success : function(hospitalList){
+                for(let hospital of hospitalList){
+                    const x = hospital.x;
+                    const y = hospital.y;
 
                     let contentString = [
                         `<div class = 'hospital-info'>`,
-                        `<strong>시도명 : </strong>${item.sidoNm}</br>`,
-                        `<strong>시군구명 : </strong>${item.sgguNm}</br>`,
-                        `<strong>전화번호 : </strong>${item.telno}</br>`,
-                        `<strong>운영가능일자 : </strong>${item.adtFrDd}</br>`,
-                        `<strong>구분코드 : </strong>${item.spclAdmTyCd} <i class="far fa-question-circle" title = "A0: 국민안심병원/97: 코로나검사 실시기관/99: 코로나 선별진료소 운영기관"></i></br> `,
+                            `<strong>기관명 : </strong>${hospital.hospital}<br>`,
+                            `<strong>시도명 : </strong>${hospital.sido}</br>`,
+                            `<strong>시군구명 : </strong>${hospital.sggu}</br>`,
+                            `<strong>전화번호 : </strong>${hospital.tel}</br>`,
+                            `<strong>운영가능일자 : </strong>${hospital.operableDate}</br>`,
+                            `<strong>구분코드 : </strong>${hospital.typeCode} <i class="far fa-question-circle" title = "A0: 국민안심병원/97: 코로나검사 실시기관/99: 코로나 선별진료소 운영기관"></i></br> `,
                         `</div>`,
                     ].join("");
 
-                    if(item.hospTyTpCd !== undefined)
-                        contentString += `<strong>선정유형 : </strong>${item.hospTyTpCd} <i class="far fa-question-circle" title = "국민안심병원 선정유형(A: 호흡기 전용 외래 진료소 분리 운영/B: 유형A+선별진료소, 호흡기병동 등 입원실까지 운영)"></i></br>`;
-
-                    $.ajax({
-                        type : "GET",
-                        url : `/api/addressToPoint?query=${encodeURIComponent(query)}`,
-                        success : function(response){
-                            addressToPointOnSuccess(response, contentString);
-                        },
-                        error : function(){
-                            alert("주소 변환 실패!")
-                        }
-                    })
+                    if(hospital.selectionType !== null)
+                        contentString += `<strong>선정유형 : </strong>${hospital.selectionType} <i class="far fa-question-circle" title = "국민안심병원 선정유형(A: 호흡기 전용 외래 진료소 분리 운영/B: 유형A+선별진료소, 호흡기병동 등 입원실까지 운영)"></i></br>`;
+                    createMaker(contentString, x, y)
                 }
             }, error : function(){
                 alert("안심병원 정보를 로드하는데 실패하였습니다.")
             }
         })
     }
- */
-};
+}
 
 function removeSuggestions(){   // 모든 추천 검색어 삭제
     const suggestionElem = $(".search-form__suggestion");

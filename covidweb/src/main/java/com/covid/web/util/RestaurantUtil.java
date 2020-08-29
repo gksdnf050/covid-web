@@ -1,5 +1,6 @@
 package com.covid.web.util;
 
+import static com.covid.web.util.ApiUtil.getResultByResponse;
 import static org.yaml.snakeyaml.util.UriEncoder.encode;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.covid.web.dto.ApiResponseDto;
@@ -26,19 +28,22 @@ public class RestaurantUtil {
 	@Value("${open-api.key.covid-restaurant-api-key}")
 	private String covidRestaurantApiKey;
 
-	private ApiUtil apiUtil;
-
 	@Autowired
 	private KakaoUtil kakaoUtil;
 
 	@Autowired
 	CovidMapper covidMapper;
 
+	@Scheduled(cron = "0 0 0 * * *")	// 매일 00시에 실행
 	public void getCovidRestaurant() throws Exception {
 		int requestSize = 1000;
 		int startIndex = 1;
 		int endIndex = 1000;
 		boolean isEnd = false;
+
+		covidMapper.deleteAllRestaurant();
+		covidMapper.alterRestaurantAutoIncrement();
+
 		while (!isEnd) {
 			ApiResponseDto apiResponseDto = covidRestaurant(Integer.toString(startIndex), Integer.toString(endIndex));
 			// int responseCode = apiResponseDto.getCode();
@@ -71,8 +76,8 @@ public class RestaurantUtil {
 				dto.setAdd1((String) imsi.get("RELAX_ADD1"));
 				dto.setAdd2((String) imsi.get("RELAX_ADD2"));
 
-				String query = (String) imsi.get("RELAX_SI_NM") + " " + (String) imsi.get("RELAX_SIDO_NM") + " "
-						+ (String) imsi.get("RELAX_RSTRNT_NM");
+				String query = imsi.get("RELAX_SI_NM") + " " + imsi.get("RELAX_SIDO_NM") + " "
+						+ imsi.get("RELAX_RSTRNT_NM");
 				ApiResponseDto apiDto = kakaoUtil.KakaolocalSearchApi(query, "1");
 				String resResult = apiDto.getResult();
 
@@ -85,12 +90,11 @@ public class RestaurantUtil {
 					dto.setX((String) ob.get("x"));
 					dto.setY((String) ob.get("y"));
 				} else {
-					dto.setX("");
-					dto.setY("");
+					dto.setX(null);
+					dto.setY(null);
 				}
 
-				// covidMapper.insertRestaurant(dto);
-
+				covidMapper.insertRestaurant(dto);
 			}
 
 			startIndex += requestSize;
@@ -115,7 +119,7 @@ public class RestaurantUtil {
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
 
-		ApiResponseDto apiResponseDto = apiUtil.getResultByResponse(conn);
+		ApiResponseDto apiResponseDto = getResultByResponse(conn);
 
 		return apiResponseDto;
 	}

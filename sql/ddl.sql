@@ -22,14 +22,14 @@ CREATE TABLE restaurant(
 	category varchar(20) COMMENT '업종',
 	category_detail varchar(20) COMMENT '업종 상세',
 	tel varchar(20) COMMENT '전화번호',
-	etc varchar(50) COMMENT '비고',
+	etc text COMMENT '비고',
 	selected varchar(5) COMMENT '선정여부',
 	reg_date datetime COMMENT '안심식당 지정일',
 	cancel_date datetime COMMENT '안심식당취소일',
 	update_date datetime COMMENT '수정일',
 	seq int COMMENT '안심식당 seq',
-    add1 varchar(50) COMMENT '주소1',
-    add2 varchar(50) COMMENT '주소2',
+    add1 varchar(80) COMMENT '주소1',
+    add2 varchar(80) COMMENT '주소2',
     x varchar(20) COMMENT 'x 좌표',
     y varchar(20) COMMENT 'y 좌표'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
