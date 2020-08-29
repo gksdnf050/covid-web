@@ -2,9 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.covid.web.mapper.CovidMapper">
 
-<insert id="insertRestaurant" parameterType="com.covid.web.dto.RestaurantDto" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertRestaurant" parameterType="com.covid.web.dto.RestaurantDto" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO restaurant(restaurant, representative, zipcode, sido, sggu, category, category_detail, tel, etc, selected, reg_date, cancel_date,  update_date, seq, add1, add2, x, y)  <!-- create_date, modift_date의 default 값은 now() -->
         VALUES(#{restaurant}, #{representative}, #{zipcode}, #{sido}, #{sggu}, #{category}, #{category_detail}, #{tel}, #{etc}, #{selected}, #{reg_date}, #{cancel_date},  #{update_date}, #{seq}, #{add1}, #{add2}, #{x}, #{y})
- </insert>
+ 	</insert>
+ 
+ 	<select id="getRestaurant" resultType="com.covid.web.dto.RestaurantDto">
+        SELECT *
+        FROM restaurant
+    </select>
  
 </mapper>
