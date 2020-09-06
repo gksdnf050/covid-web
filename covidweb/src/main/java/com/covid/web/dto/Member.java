@@ -1,7 +1,10 @@
 package com.covid.web.dto;
 
+import lombok.ToString;
+
 import java.util.Date;
 
+@ToString
 public class Member {
     private Long id;
     private String name;

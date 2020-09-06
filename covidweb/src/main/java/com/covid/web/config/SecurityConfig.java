@@ -23,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/webjars/**");
+		web.ignoring().antMatchers("/css/**");
+		web.ignoring().antMatchers("/js/**");
+		web.ignoring().antMatchers("/fonts/**");
 	}
 
 	@Override
@@ -35,14 +38,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 http
          .csrf().disable()
          .authorizeRequests()
-         .antMatchers("/").permitAll()
-         .antMatchers("/securepage", "/members/**").hasRole("USER")
+         .antMatchers("/main").hasRole("USER")
          .anyRequest().authenticated()
          .and()
              .formLogin()
-             .defaultSuccessUrl("/main",true)
-             .and()
-             .httpBasic();
+				 .loginPage("/login")
+				 .loginProcessingUrl("/authenticate")
+				 .usernameParameter("username")
+				 .passwordParameter("password")
+				 .defaultSuccessUrl("/main",true)
+				 .permitAll()
+		 .and()
+		 .httpBasic();
 	}
 
 	@Bean
