@@ -8,7 +8,6 @@
 
     $('.validate-form').on('submit',function(event){
         var check = true;
-        
 
         for(var i=0; i<input.length; i++) {
             if(validate(input[i]) == false){
@@ -16,7 +15,6 @@
                 check=false;
             }
         }
-
        return check;
     });
 
