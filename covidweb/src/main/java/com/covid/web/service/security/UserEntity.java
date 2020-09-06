@@ -1,5 +1,8 @@
 package com.covid.web.service.security;
 
+import lombok.ToString;
+
+@ToString
 public class UserEntity {
 	private String loginUserId;
     private String password;
