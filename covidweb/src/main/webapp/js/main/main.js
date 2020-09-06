@@ -11,16 +11,54 @@ let selectedSuggestionIndex = 0;    // 선택된 추천 검색어의 index
 
 const mapOptions = {
     center: new naver.maps.LatLng(37.3595704, 127.105399),
-    zoom: 15
+    zoom: 15,
+    minZoom : 12
 };
 
+function delay(ms) {return new Promise(resolve => setTimeout(resolve, ms));}
+
+
 let map = new naver.maps.Map('map', mapOptions);
+const markers = []; // 마커를 담는 리스트
+
+naver.maps.Event.addListener(map, 'idle', function () {
+    updateMakers(map, markers);
+})
+
+function updateMakers(map, makers) {
+    let mapBounds = map.getBounds();
+    let position;
+
+    for(let marker of makers){
+        position = marker.getPosition();
+
+        if(mapBounds.hasLatLng(position)){
+            showMarker(map, marker);
+        }else{
+            hideMarker(map, marker);
+        }
+    }
+}
+
+function showMarker(map, marker) {
+    if(marker.getMap()) return;
+    marker.setMap(map);
+}
+
+function hideMarker(map, marker) {
+    if (!marker.getMap()) return;
+    marker.setMap(null);
+}
 
 function createMaker(contentString, x, y){
     const marker = new naver.maps.Marker({
         position: new naver.maps.LatLng(y, x),
         map: map
     });
+
+    marker.setMap(null);
+
+    markers.push(marker);
 
     const infowindow = new naver.maps.InfoWindow({
         content: contentString
@@ -35,7 +73,23 @@ function createMaker(contentString, x, y){
     });
 }
 
+function loading(flag){ // 로딩창을 생성 또는 삭제하는 함수
+    if(flag === true){
+        /* 로딩창 추가 */
+        $(".loading-bg").removeClass("none")
+        $(".loader").removeClass("none")
+    }else{
+        /* 로딩창 삭제 */
+        $(".loading-bg").addClass("none")
+        $(".loader").addClass("none")
+    }
+}
+
 async function initializer(mode){
+    let restaurantLoaded = false;   // 안심식당 정보가 로드 되었는지를 나타내는 flag
+    let hospitalLoaded = false; // 안심병원 정보가 로드 되었는지를 나타내는 flag
+
+    loading(true)
     if(mode !== "hospital"){
         $.ajax({
             type : "GET",
@@ -76,6 +130,7 @@ async function initializer(mode){
 
                     createMaker(contentString, x, y)
                 }
+                restaurantLoaded = true;
             },
             error : function(){
                 alert("안심식당 정보를 로드하는데 실패하였습니다.")
@@ -107,10 +162,29 @@ async function initializer(mode){
                         contentString += `<strong>선정유형 : </strong>${hospital.selectionType} <i class="far fa-question-circle" title = "국민안심병원 선정유형(A: 호흡기 전용 외래 진료소 분리 운영/B: 유형A+선별진료소, 호흡기병동 등 입원실까지 운영)"></i></br>`;
                     createMaker(contentString, x, y)
                 }
+
+                hospitalLoaded = true
             }, error : function(){
                 alert("안심병원 정보를 로드하는데 실패하였습니다.")
             }
         })
+    }
+
+    let allLoaded = false;  // 모드에 따른 정보가 모두 로드되었는지를 나타내는 flag
+
+    while(!allLoaded){  // 로드 될 때까지 while문 수행
+        await delay(500);   // 500ms 대기
+
+        switch(mode){
+            case "hospital" : if(hospitalLoaded === true) allLoaded = true; break;
+            case "restaurant" : if(restaurantLoaded === true) allLoaded = true; break;
+            case "all" : if(hospitalLoaded === true && restaurantLoaded === true) allLoaded = true; break;
+        }
+    }
+
+    if(allLoaded) {   // 모두 로드 된 경우
+        updateMakers(map, markers); // update (marker를 생성할 때 모두 맵에서 지웠기 때문에 보이는 지도 영역의 marker들은 보이도록 updateMarkers를 호출해야함.)
+        loading(false);
     }
 }
 

@@ -12,6 +12,7 @@
     <head>
         <title>covidWeb</title>
         <link rel="stylesheet" href="/css/main/main.css">
+        <link rel="stylesheet" href="/css/main/loadging.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
     </head>
@@ -35,6 +36,11 @@
         </svg>
 
         <div id="map" class = "covid-map"></div>
+
+        <div class="loading-bg dark-bg dark-bg--lenient none"></div>
+
+        <div class="loader none">
+        </div>
 
         <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
