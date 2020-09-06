@@ -4,4 +4,9 @@
  	<select id="getMemberByEmail" resultType="com.covid.web.dto.Member">
         SELECT id, name, password, email, create_date, modify_date FROM `member` WHERE email = 'carami@example.com';
     </select>
+    
+     <insert id="joinUser" parameterType="com.covid.web.dto.Member">
+        INSERT INTO `member`(name, password, email)
+        VALUES(#{name}, #{password}, #{email})
+    </insert>
 </mapper>

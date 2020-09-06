@@ -42,19 +42,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 http
          .csrf().disable()
          .authorizeRequests()
-         .antMatchers("/main").hasRole("USER")
+         .antMatchers("/login","/signup").permitAll()
+         .antMatchers("/main").authenticated()
          .anyRequest().authenticated()
          .and()
              .formLogin()
+                 .failureHandler(authFailureHandler)
 				 .loginPage("/login")
 				 .loginProcessingUrl("/authenticate")
 				 .usernameParameter("username")
 				 .passwordParameter("password")
 				 .defaultSuccessUrl("/main",true)
-				 .failureHandler(authFailureHandler)
 				 .permitAll()
 		 .and()
-		 .httpBasic();
+		 	.logout()
+		 	.logoutUrl("/logout")
+		 	.logoutSuccessUrl("/");
 	}
 
 	@Bean

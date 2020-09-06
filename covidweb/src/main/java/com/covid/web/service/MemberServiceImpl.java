@@ -3,6 +3,7 @@ package com.covid.web.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.covid.web.dto.Member;
@@ -22,11 +23,19 @@ public class MemberServiceImpl implements MemberService {
 		this.memberRoleDao = memberRoleDao;
 	}
 
+	public void joinUser(Member member) {
+		// 비밀번호 암호화
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		member.setPassword(passwordEncoder.encode(member.getPassword()));
+
+		memberDao.joinUser(member);
+	}
+
 	@Override
 	public UserEntity getUser(String loginUserId) {
 		Member member = memberDao.getMemberByEmail(loginUserId);
 
-		if(member == null)
+		if (member == null)
 			return null;
 
 		return new UserEntity(member.getEmail(), member.getPassword());

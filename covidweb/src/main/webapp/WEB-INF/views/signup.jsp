@@ -21,11 +21,11 @@
         <div class="limiter">
             <div class="login-container">
                 <div class="login-wrap p-l-60 p-r-60 p-t-55 p-b-40">
-                    <form class="login-form validate-form flex-sb flex-w" method="post" action = "/authenticate">
-                        <span class="login-form__title p-b-32">로그인</span>
+                    <form class="login-form validate-form flex-sb flex-w" method="post" action = "/signup">
+                        <span class="login-form__title p-b-32">회원가입</span>
 
                         <div class="input-wrap validate-input m-b-36" data-validate="아이디를 입력해주세요">
-                            <input class="input-wrap__input" type="text" name="username" placeholder="아이디">
+                            <input class="input-wrap__input" type="text" name="name" placeholder="아이디">
                             <span class="input-wrap__input-focus"></span>
                         </div>
 
@@ -36,17 +36,19 @@
                             <input class="input-wrap__input" type="password" name="password" placeholder="비밀번호">
                             <span class="input-wrap__input-focus"></span>
                         </div>
-			
-                        <div class="flex-sb-m w-full p-b-48">
-                            <div>
-                                <a href="/signup" class="txt3">Sign Up</a>
-                            </div>
-                            <div>
-                                <a href="#" class="txt3">Forgot Password?</a>
-                            </div>
+                        
+						<div class="input-wrap validate-input m-b-12" data-validate="이메일을 입력해주세요">
+                            <span class="btn-show-pass">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                            <input class="input-wrap__input" type="text" name="email" placeholder="이메일">
+                            <span class="input-wrap__input-focus"></span>
                         </div>
-							${error}
-                        <button class="login-form__login-btn">Login</button>
+                        <div class="flex-sb-m w-full p-b-48">
+                          
+                        </div>
+							
+                        <button class="login-form__login-btn">sign up</button>
                     </form>
                 </div>
             </div>
