@@ -19,6 +19,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
+	
+	 @Autowired
+	 AuthFailureHandler authFailureHandler;
+	 
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -47,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 .usernameParameter("username")
 				 .passwordParameter("password")
 				 .defaultSuccessUrl("/main",true)
+				 .failureHandler(authFailureHandler)
 				 .permitAll()
 		 .and()
 		 .httpBasic();

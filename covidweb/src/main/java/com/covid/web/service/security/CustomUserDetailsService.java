@@ -24,8 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		// 해당 정보를 CustomUserDetails객체에 저장한다.
 		UserEntity customUser = userdbService.getUser(loginId);
 
-		System.out.println(customUser);
-
+	
 		if (customUser == null)
 			throw new UsernameNotFoundException("사용자가 입력한 아이디에 해당하는 사용자를 찾을 수 없습니다.");
 
