@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
-        <title>Login</title>
+        <title>회원가입</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
@@ -24,31 +24,31 @@
                     <form class="login-form validate-form flex-sb flex-w" method="post" action = "/signup">
                         <span class="login-form__title p-b-32">회원가입</span>
 
-                        <div class="input-wrap validate-input m-b-36" data-validate="아이디를 입력해주세요">
-                            <input class="input-wrap__input" type="text" name="name" placeholder="아이디">
-                            <span class="input-wrap__input-focus"></span>
-                        </div>
-
-                        <div class="input-wrap validate-input m-b-12" data-validate="비밀번호를 입력해주세요">
-                            <span class="btn-show-pass">
-                                <i class="fa fa-eye"></i>
-                            </span>
-                            <input class="input-wrap__input" type="password" name="password" placeholder="비밀번호">
-                            <span class="input-wrap__input-focus"></span>
-                        </div>
-                        
-						<div class="input-wrap validate-input m-b-12" data-validate="이메일을 입력해주세요">
+                        <div class="input-wrap validate-input m-b-15" data-validate="이메일을 입력해주세요">
                             <span class="btn-show-pass">
                                 <i class="fa fa-eye"></i>
                             </span>
                             <input class="input-wrap__input" type="text" name="email" placeholder="이메일">
                             <span class="input-wrap__input-focus"></span>
                         </div>
-                        <div class="flex-sb-m w-full p-b-48">
-                          
+
+                        <div class="input-wrap validate-input m-b-15" data-validate="아이디를 입력해주세요">
+                            <input class="input-wrap__input" type="text" name="name" placeholder="아이디">
+                            <span class="input-wrap__input-focus"></span>
+                        </div>
+
+                        <div class="input-wrap validate-input m-b-15" data-validate="비밀번호를 입력해주세요">
+                            <span class="btn-show-pass">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                            <input class="input-wrap__input" type="password" name="password" placeholder="비밀번호">
+                            <span class="input-wrap__input-focus"></span>
+                        </div>
+
+                        <div class="flex-sb-m w-full p-b-30">
                         </div>
 							
-                        <button class="login-form__login-btn">sign up</button>
+                        <button class="login-form__login-btn">Sign up</button>
                     </form>
                 </div>
             </div>

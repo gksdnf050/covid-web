@@ -29,6 +29,87 @@ body {
     background: #eef7ff;
 }
 
+ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.sidebar {
+    position: absolute;
+    z-index: 1;
+    min-height: 100vh;
+    width: 60px;
+    background-color: #313443;
+    padding-top: 95px;
+    float: left;
+}
+.sidebar ul {
+    text-align: center;
+    color: white;
+}
+.sidebar ul li {
+    cursor: pointer;
+    transition: all ease-out 120ms;
+}
+
+.sidebar__link{
+    width: 100%;
+    height: 100%;
+}
+.sidebar ul li i {
+    display: block;
+    font-size: 24px;
+    transition: all ease 450ms;
+    line-height: 80px;
+}
+.sidebar ul li .tooltip {
+    display: inline-block;
+    position: absolute;
+    background-color: #313443;
+    padding: 8px 15px;
+    border-radius: 3px;
+    margin-top: -55px;
+    left: 90px;
+    opacity: 0;
+    visibility: hidden;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    width: 100px;
+}
+.sidebar ul li .tooltip:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -4px;
+    top: 10px;
+    transform: rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: inherit;
+}
+.sidebar ul li:hover {
+    background-color: #22252e;
+}
+.sidebar ul li:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+.sidebar ul li.active {
+    background-color: #22252e;
+}
+.sidebar ul li.active i {
+    color: #98d7ec;
+}
+
+.sidebar__link > *{
+    color: #fff;
+}
+
+.logout{
+    margin-top: 500px;
+}
+
 .covid-map{
     /* 화면 전체를 맵으로 */
     width:100%;
@@ -40,7 +121,7 @@ body {
     z-index:1;
     position:absolute;  /**/
     top:50px;
-    left:50px;
+    left:90px;
 
     width: 350px;
     border-radius: 10px;    /* 테두리가 동그란 모양 */

@@ -1,4 +1,4 @@
-package com.covid.web.config;
+package com.covid.web.config.db;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;

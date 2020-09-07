@@ -1,4 +1,4 @@
-package com.covid.web.config;
+package com.covid.web.config.db;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;

@@ -15,9 +15,40 @@
         <link rel="stylesheet" href="/css/main/loadging.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
 
     <body>
+        <nav class="sidebar">   <!-- https://freefrontend.com/css-menu/ -->
+            <ul>
+                <li class="sidebar__all-mode">
+                    <a class ="sidebar__link" href="/main?mode=all">
+                        <i class="fa fa-font menu__icon" style="font-size:23px;"></i>
+                    </a>
+                    <span class="tooltip">전체</span>
+                </li>
+                <li class="sidebar__hospital-mode">
+                    <a class = "sidebar__link" href="/main?mode=hospital">
+                        <i class="fa fa-hospital-o menu__icon" style="font-size:23px;"></i>
+                    </a>
+                    <span class="tooltip">안심병원</span>
+                </li>
+                <li class = "sidebar__restaurant-mode">
+                    <a class = "sidebar__link" href="/main?mode=restaurant">
+                        <i class="material-icons menu__icon" style="font-size:23px">restaurant</i>
+                    </a>
+                    <span class="tooltip">안심식당</span>
+                </li>
+                <li class = "logout">
+                    <a class = "sidebar__link" href="/logout">
+                        <i class="fa fa-sign-out menu__icon" style="font-size:23px"></i>
+                    </a>
+                    <span class="tooltip">로그아웃</span>
+                </li>
+            </ul>
+        </nav>
+
         <form class="search-form">
             <button type="submit" class="search-button">    <%-- submit 버튼 --%>
                 <svg class="submit-button">
@@ -39,7 +70,7 @@
 
         <div class="loading-bg dark-bg dark-bg--lenient none"></div>
 
-        <div class="loader none">
+        <div class="loader none">   <!-- https://freefrontend.com/css-loaders/,  https://freefrontend.com/css-spinners/, https://codepen.io/havardob/pen/VjjJey/ -->
         </div>
 
         <script  src="http://code.jquery.com/jquery-latest.min.js"></script>

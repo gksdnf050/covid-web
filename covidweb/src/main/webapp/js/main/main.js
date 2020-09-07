@@ -89,6 +89,8 @@ async function initializer(mode){
     let restaurantLoaded = false;   // 안심식당 정보가 로드 되었는지를 나타내는 flag
     let hospitalLoaded = false; // 안심병원 정보가 로드 되었는지를 나타내는 flag
 
+    $(`.sidebar__${mode}-mode`).addClass("active");
+
     loading(true)
     if(mode !== "hospital"){
         $.ajax({

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
-public class viewController {
+public class ViewController {
 
     private MemberService memberService;
 
