@@ -38,7 +38,7 @@
                             <span class="input-wrap__input-focus"></span>
                         </div>
 			
-                        <div class="flex-sb-m w-full p-b-48">
+                        <div class="flex-sb-m w-full p-b-40">
                             <div>
                                 <a href="/signup" class="txt3">Sign Up</a>
                             </div>
@@ -46,7 +46,7 @@
                                 <a href="#" class="txt3">Forgot Password?</a>
                             </div>
                         </div>
-							${error}
+                        <span class = "login-form__fail-msg p-b-15">${loginFailMsg}</span>
                         <button class="login-form__login-btn">Login</button>
                     </form>
                 </div>

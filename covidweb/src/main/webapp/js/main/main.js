@@ -10,7 +10,7 @@ let lastKeyEvent = 0;   // input 태그의 가장 최근에 발생한 이벤트�
 let selectedSuggestionIndex = 0;    // 선택된 추천 검색어의 index
 
 const mapOptions = {
-    center: new naver.maps.LatLng(37.3595704, 127.105399),
+    center: new naver.maps.LatLng(37.5546788388674, 126.970606917394),  // 서울역 좌표
     zoom: 15,
     minZoom : 12
 };
@@ -222,7 +222,7 @@ searchFormElem.submit(function(event) {
 
     const x = xCoordinateELem.val();    // x 좌표
     const y = yCoordinateELem.val();    // y 좌표
-
+    console.log(x, y)
     map.setCenter(new naver.maps.LatLng(y, x))  // map 이동
 
     searchInputElem.val(selectedValue);    // input 태그에 입력된 값을 선택한 추천 검색어의 title로 수정.

@@ -35,6 +35,6 @@
     </delete>
 
     <update id = "alterHospitalAutoIncrement">
-            ALTER TABLE hospital AUTO_INCREMENT = 1;
+        ALTER TABLE hospital AUTO_INCREMENT = 1;
     </update>
 </mapper>

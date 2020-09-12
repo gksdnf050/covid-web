@@ -20,8 +20,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
 	
-	 @Autowired
-	 AuthFailureHandler authFailureHandler;
+	@Autowired
+	AuthFailureHandler authFailureHandler;
 	 
 
 	@Override

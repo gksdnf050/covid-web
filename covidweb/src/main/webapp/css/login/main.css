@@ -128,6 +128,7 @@ iframe {
     font-size: 13px;
     color: #555555;
     line-height: 1.4;
+    font-weight: bold;
 }
 
 
@@ -197,6 +198,12 @@ iframe {
     border-radius: 2px;
 }
 
+.login-form__fail-msg{
+    text-align: center;
+    font-size: 13px;
+    color: red;
+    width: 100%;
+}
 
 /*---------------------------------------------*/
 .input-wrap__input {
