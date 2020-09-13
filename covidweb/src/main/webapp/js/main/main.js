@@ -12,7 +12,7 @@ let selectedSuggestionIndex = 0;    // 선택된 추천 검색어의 index
 const mapOptions = {
     center: new naver.maps.LatLng(37.5546788388674, 126.970606917394),  // 서울역 좌표
     zoom: 15,
-    minZoom : 12
+    minZoom : 13
 };
 
 function delay(ms) {return new Promise(resolve => setTimeout(resolve, ms));}
@@ -50,10 +50,13 @@ function hideMarker(map, marker) {
     marker.setMap(null);
 }
 
-function createMaker(contentString, x, y){
+function createMaker(contentString, iconFileName, x, y){
     const marker = new naver.maps.Marker({
         position: new naver.maps.LatLng(y, x),
-        map: map
+        map: map,
+        icon : {
+            url : `/icon/${iconFileName}`,
+        }
     });
 
     marker.setMap(null);
@@ -69,6 +72,7 @@ function createMaker(contentString, x, y){
             infowindow.close();
         } else {
             infowindow.open(map, marker);
+            $("div.info-window").parents('div').parents('div').css("border-radius", "10px");    // info-window css 추가
         }
     });
 }
@@ -108,20 +112,18 @@ async function initializer(mode){
                         {title : "수정일", value : restaurant.update_date}];
 
                     let contentString = [
-                        `<div class = "restaurant-info">`+
-                            `<strong>사업자명 : </strong>${restaurant.restaurant}<br>` +
-                            `<strong>대표자명 : </strong>${restaurant.representative}<br>` +
-                            `<strong>시도코드 : </strong>${restaurant.zipcode}<br>` +
-                            `<strong>시도명 : </strong>${restaurant.sido}<br>` +
-                            `<strong>시군구명 : </strong>${restaurant.sggu}<br>` +
-                            `<strong>없종 : </strong>${restaurant.category}<br>` +
-                            `<strong>전화번호 : </strong>${restaurant.tel}<br>` +
-                            `<strong>비고 : </strong>${restaurant.etc}<br>` +
-                            `<strong>선정여부 : </strong>${restaurant.selected}<br>` +
-                            `<strong>안심식당 seq : </strong>${restaurant.seq}<br>` +
-                            `<strong>주소1 : </strong>${restaurant.add1}<br>` +
-                            `<strong>주소2 : </strong>${restaurant.add2}<br>` +
-                        `</div>`
+                        `<strong>사업자명 : </strong>${restaurant.restaurant}<br>`,
+                        `<strong>대표자명 : </strong>${restaurant.representative}<br>`,
+                        `<strong>시도코드 : </strong>${restaurant.zipcode}<br>`,
+                        `<strong>시도명 : </strong>${restaurant.sido}<br>`,
+                        `<strong>시군구명 : </strong>${restaurant.sggu}<br>`,
+                        `<strong>없종 : </strong>${restaurant.category}<br>`,
+                        `<strong>전화번호 : </strong>${restaurant.tel}<br>`,
+                        `<strong>비고 : </strong>${restaurant.etc}<br>`,
+                        `<strong>선정여부 : </strong>${restaurant.selected}<br>`,
+                        `<strong>안심식당 seq : </strong>${restaurant.seq}<br>`,
+                        `<strong>주소1 : </strong>${restaurant.add1}<br>`,
+                        `<strong>주소2 : </strong>${restaurant.add2}<br>`
                     ].join("");
 
                     for(let nullable of nullableList){
@@ -130,7 +132,11 @@ async function initializer(mode){
                         }
                     }
 
-                    createMaker(contentString, x, y)
+                    contentString = `<div class = "info-window">` +
+                                        `${contentString}` +
+                                    `</div>`
+
+                    createMaker(contentString, "restaurant.png", x, y)
                 }
                 restaurantLoaded = true;
             },
@@ -150,19 +156,22 @@ async function initializer(mode){
                     const y = hospital.y;
 
                     let contentString = [
-                        `<div class = 'hospital-info'>`,
-                            `<strong>기관명 : </strong>${hospital.hospital}<br>`,
-                            `<strong>시도명 : </strong>${hospital.sido}</br>`,
-                            `<strong>시군구명 : </strong>${hospital.sggu}</br>`,
-                            `<strong>전화번호 : </strong>${hospital.tel}</br>`,
-                            `<strong>운영가능일자 : </strong>${hospital.operableDate}</br>`,
-                            `<strong>구분코드 : </strong>${hospital.typeCode} <i class="far fa-question-circle" title = "A0: 국민안심병원/97: 코로나검사 실시기관/99: 코로나 선별진료소 운영기관"></i></br> `,
-                        `</div>`,
+                        `<strong>기관명 : </strong>${hospital.hospital}<br>`,
+                        `<strong>시도명 : </strong>${hospital.sido}</br>`,
+                        `<strong>시군구명 : </strong>${hospital.sggu}</br>`,
+                        `<strong>전화번호 : </strong>${hospital.tel}</br>`,
+                        `<strong>운영가능일자 : </strong>${hospital.operableDate}</br>`,
+                        `<strong>구분코드 : </strong>${hospital.typeCode} <i class="far fa-question-circle" title = "A0: 국민안심병원/97: 코로나검사 실시기관/99: 코로나 선별진료소 운영기관"></i></br> `,
                     ].join("");
 
                     if(hospital.selectionType !== null)
                         contentString += `<strong>선정유형 : </strong>${hospital.selectionType} <i class="far fa-question-circle" title = "국민안심병원 선정유형(A: 호흡기 전용 외래 진료소 분리 운영/B: 유형A+선별진료소, 호흡기병동 등 입원실까지 운영)"></i></br>`;
-                    createMaker(contentString, x, y)
+
+                    contentString = `<div class = "info-window">` +
+                                        `${contentString}` +
+                                    `</div>`
+
+                    createMaker(contentString, "hospital.png", x, y)
                 }
 
                 hospitalLoaded = true

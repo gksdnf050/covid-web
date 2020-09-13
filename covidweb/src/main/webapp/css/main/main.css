@@ -29,6 +29,10 @@ body {
     background: #eef7ff;
 }
 
+.info-window{
+    padding: 10px 10px 10px 10px;
+}
+
 ul{
     margin: 0;
     padding: 0;
@@ -107,7 +111,7 @@ ul{
 }
 
 .logout{
-    margin-top: 500px;
+    margin-top: 53vh;
 }
 
 .covid-map{

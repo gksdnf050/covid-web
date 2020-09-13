@@ -18,13 +18,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 // 프론트 : 로그인 페이지
 // 프론트 : 전체, 병원, 식당 메뉴 구현
 // 프론트 : 회원가입 페이지 만들기
+// 프론트 : 병원, 식당에 따라 마커 이미지 변경
 
 // TODO : 백엔드 : 주소 변환 안되는 것 처리.
 // TODO : 백엔드 : 확진자 정보 API 요청 구현 및 Controller 구현
 
 // TODO : 프론트 : 확진자 정보 표시 구현
 // TODO : 프론트 : 마커 정보 표시 꾸미기
-// TODO : 프론트 : 병원, 식당에 따라 마커 이미지 변경
+// TODO : 프론트 : 출처 표시
+
 @EnableScheduling
 @SpringBootApplication
 @EnableConfigurationProperties(OpenApiSetting.class)	// https://javacan.tistory.com/entry/springboot-configuration-properties-class 참조
