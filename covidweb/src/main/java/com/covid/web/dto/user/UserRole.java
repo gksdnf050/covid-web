@@ -1,4 +1,4 @@
-package com.covid.web.dto;
+package com.covid.web.dto.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,12 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserRoleDto {
+public class UserRole {
 	private int id;
 	private int userId;
 	private String roleName;
 
-	public UserRoleDto(int userId, String roleName) {
+	public UserRole(int userId, String roleName) {
 		this.userId = userId;
 		this.roleName = roleName;
 	}

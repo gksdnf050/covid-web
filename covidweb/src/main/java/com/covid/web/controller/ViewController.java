@@ -1,8 +1,8 @@
 package com.covid.web.controller;
 
-import com.covid.web.dto.UserDto;
-import com.covid.web.service.UserService;
-import com.covid.web.service.security.UserEntity;
+import com.covid.web.dto.user.User;
+import com.covid.web.service.user.UserService;
+import com.covid.web.dto.user.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,7 +35,7 @@ public class ViewController {
 
     // 회원가입 처리
     @PostMapping("signup")
-    public String signUp(UserDto userDto, RedirectAttributes redirectAttributes) {
+    public String signUp(User userDto, RedirectAttributes redirectAttributes) {
         String email = userDto.getEmail();
         UserEntity user = userService.getUser(email);   // 이메일로 중복 확인
 

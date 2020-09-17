@@ -1,8 +1,8 @@
 package com.covid.web.util;
 
-import com.covid.web.dto.ApiResponseDto;
-import com.covid.web.dto.HospitalDto;
-import com.covid.web.mapper.CovidMapper;
+import com.covid.web.dto.ApiResponse;
+import com.covid.web.dto.CovidHospital;
+import com.covid.web.mapper.CovidHospitalMappper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -22,20 +22,20 @@ import static org.yaml.snakeyaml.util.UriEncoder.encode;
 
 @Component
 @PropertySource("classpath:application.properties")
-public class HospitalUtil {
-    @Value("${open-api.key.covid-hospital-api-key}")
-    private String covidHospitalApiKey; // 애플리케이션 클라이언트 아이디값";
+public class CovidHospitalUtil {
+    @Value("${open-api.key.public-data-api-key}")
+    private String publicDataApiKey; // 애플리케이션 클라이언트 아이디값";
 
     @Autowired
-    private CovidMapper covidMapper;
+    private CovidHospitalMappper hospitalMappper;
 
     @Autowired
     private KakaoUtil kakaoUtil;
 
-    public ApiResponseDto getAllHospital(String pageNo, String numOfRows, String spclAdmTyCd) throws IOException {
+    public ApiResponse getAllHospital(String pageNo, String numOfRows, String spclAdmTyCd) throws IOException {
         StringBuilder urlBuilder = new StringBuilder(
                 "http://apis.data.go.kr/B551182/pubReliefHospService/getpubReliefHospList"); /* URL */
-        urlBuilder.append("?" + encode("ServiceKey") + "=" + covidHospitalApiKey); /* Service Key */
+        urlBuilder.append("?" + encode("ServiceKey") + "=" + publicDataApiKey); /* Service Key */
         urlBuilder.append("&" + encode("pageNo") + "=" + encode(pageNo)); /* 페이지번호 */
         urlBuilder.append("&" + encode("numOfRows") + "=" + encode(numOfRows)); /* 한 페이지 결과 수 */
 
@@ -48,13 +48,13 @@ public class HospitalUtil {
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
 
-        ApiResponseDto apiResponseDto = getResultByResponse(conn);
+        ApiResponse apiResponse = getResultByResponse(conn);
 
-        String jsonString = xmlToJson(apiResponseDto.getResult(), true);
+        String jsonString = xmlToJson(apiResponse.getResult(), true);
 
-        apiResponseDto.setResult(jsonString);
+        apiResponse.setResult(jsonString);
 
-        return apiResponseDto;
+        return apiResponse;
     }
 
     public static String filterAgencyName(String agencyName){
@@ -78,9 +78,9 @@ public class HospitalUtil {
         String numOfRows = "1000000";
         String spclAdmTyCd = null;
 
-        ApiResponseDto apiResponseDto = getAllHospital(pageNo, numOfRows, spclAdmTyCd);
+        ApiResponse apiResponse = getAllHospital(pageNo, numOfRows, spclAdmTyCd);
 
-        String responseResult = apiResponseDto.getResult();
+        String responseResult = apiResponse.getResult();
 
         Map<String, Object> jsonMap = jsonToMap(responseResult);
 
@@ -89,8 +89,8 @@ public class HospitalUtil {
         LinkedHashMap<String, Object> items = (LinkedHashMap<String, Object>) body.get("items");
         ArrayList item = (ArrayList) items.get("item");
 
-        covidMapper.deleteAllHospital();
-        covidMapper.alterHospitalAutoIncrement();
+        hospitalMappper.deleteAllHospital();
+        hospitalMappper.alterHospitalAutoIncrement();
 
         for(Object hospital : item){
             LinkedHashMap hospitalInfo = (LinkedHashMap) hospital;
@@ -110,7 +110,7 @@ public class HospitalUtil {
 
             String query = sido + " " + sggu + " " + filterdAgencyName;
 
-            ApiResponseDto searchResult = kakaoUtil.KakaolocalSearchApi(query, "1");
+            ApiResponse searchResult = kakaoUtil.KakaolocalSearchApi(query, "1");
 
             Map<String, Object> jsonSearchResult = jsonToMap(searchResult.getResult());
             int total_count = (Integer) ((LinkedHashMap) jsonSearchResult.get("meta")).get("total_count");
@@ -121,8 +121,8 @@ public class HospitalUtil {
                 y = (String) ((LinkedHashMap)documents).get("y");
             }
 
-            HospitalDto hospitalDto = new HospitalDto(agencyName, sido, sggu, selectionType, tel, typeCode, x, y, operableDate);
-            covidMapper.insertHospital(hospitalDto);
+            CovidHospital hospitalDto = new CovidHospital(agencyName, sido, sggu, selectionType, tel, typeCode, x, y, operableDate);
+            hospitalMappper.insertHospital(hospitalDto);
         }
     }
 }

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.covid.web.mapper.CovidInfoMapper">
+    <select id = "selectMostRecentDomesticCovidInfoByDay" resultType="com.covid.web.dto.DomesticCovidInfo">
+        SELECT * FROM domestic WHERE date(state_dt) = date(#{stateDate}) ORDER BY state_time DESC LIMIT 1; <!-- 기준일이 stateDate인 row중 기준 시간이 최근인 row를 조회 -->
+    </select>
+
+    <insert id = "insertDomesticCovidInfo" parameterType="com.covid.web.dto.DomesticCovidInfo">
+        INSERT INTO domestic (insert_date, seq, state_dt, state_time, decide_cnt, clear_cnt, exam_cnt, death_cnt, care_cnt, resutl_neg_cnt, acc_exam_cnt, acc_exam_comp_cnt, acc_def_rate, create_dt, update_dt)
+        VALUES(NOW(), #{seq}, #{stateDt}, #{stateTime}, #{decideCnt}, #{clearCnt}, #{examCnt}, #{deathCnt}, #{careCnt}, #{resutlNegCnt}, #{accExamCnt}, #{accExamCompCnt}, #{accDefRate}, #{createDt}, #{updateDt})
+    </insert>
+
+    <delete id = "deleteAllDomesticCovidInfoByDay">
+        DELETE FROM domestic WHERE date(state_dt) = date(#{stateDate});
+    </delete>
+
+
+
+    <select id="selectDistinctCityCount" resultType="int">
+        SELECT count(distinct gubun) FROM city;
+    </select>
+
+    <select id = "selectDistinctCity" resultType="java.lang.String">
+        SELECT distinct(gubun) FROM city LIMIT ${start}, ${limit};
+    </select>
+
+    <select id = "selectCityCovidInfoByDay" resultType="com.covid.web.dto.CityCovidInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+        SELECT * FROM city WHERE date(std_day) = date(#{stdDay});
+    </select>
+
+    <select id = "selectMostRecentCityCovidInfoByDay" resultType="com.covid.web.dto.CityCovidInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+        SELECT *
+        FROM (
+            SELECT *
+            FROM city
+            WHERE (gubun, std_day) in (
+                SELECT gubun, max(std_day) as std_day
+                FROM city
+                WHERE date(std_day) = date(#{stdDay}) AND gubun = #{cityName}
+                GROUP BY gubun
+            )
+        ) AS temp
+        GROUP BY gubun
+    </select>
+
+    <insert id = "insertCityCovidInfo" parameterType="com.covid.web.dto.CityCovidInfo">
+        INSERT INTO city (insert_date, def_cnt, local_occ_cnt, over_flow_cnt, isol_ing_cnt, seq, death_cnt, gubun, gubun_cn, gubun_en, inc_dec, isol_clear_cnt, qur_rate, create_dt, std_day, update_dt)
+        VALUES(NOW(), #{defCnt}, #{localOccCnt}, #{overFlowCnt}, #{isolIngCnt}, #{seq}, #{deathCnt}, #{gubun}, #{gubunCn}, #{gubunEn}, #{incDec}, #{isolClearCnt}, #{qurRate}, #{createDt}, #{stdDay}, #{updateDt})
+    </insert>
+
+    <delete id = "deleteAllCityCovidInfoByDay">
+        DELETE FROM city WHERE date(std_day) = date(#{stdDay});
+    </delete>
+
+
+    <select id="selectDistinctGenAndAgeCount" resultType="int">
+        SELECT count(distinct gubun) FROM age;
+    </select>
+
+    <select id = "selectDistinctGenAndAge" resultType="java.lang.String">
+        SELECT distinct(gubun) FROM age LIMIT ${start}, ${limit};;
+    </select>
+
+    <select id = "selectGenAndAgeCovidInfoByDay" resultType="com.covid.web.dto.AgeCovidInfo">
+        SELECT * FROM age WHERE date(create_dt) = date(#{createDt});
+    </select>
+
+    <select id = "selectMostRecentGenAndAgeCovidInfoByDay" resultType="com.covid.web.dto.AgeCovidInfo">
+        SELECT *
+        FROM (
+            SELECT *
+            FROM age
+            WHERE (gubun, create_dt) in (
+                SELECT gubun, max(create_dt) as create_dt
+                FROM age
+                WHERE date(create_dt) = date(#{createDt}) AND gubun = #{genOrAge}
+                GROUP BY gubun
+            )
+        ) AS temp
+        GROUP BY gubun;
+    </select>
+
+    <insert id = "insertGenAndAgeCovidInfo" parameterType="com.covid.web.dto.AgeCovidInfo">
+        INSERT INTO age (insert_date, gubun, conf_case, conf_case_rate, death, death_rate, critical_rate, create_dt, update_dt)
+        VALUES(NOW(), #{gubun}, #{confCase}, #{confCaseRate}, #{death}, #{deathRate}, #{criticalRate}, #{createDt}, #{updateDt})
+    </insert>
+
+    <delete id="deleteAllGenAndAgeCovidInfoByDay">
+        DELETE FROM age WHERE date(create_dt) = date(#{createDt});
+    </delete>
+
+
+    <select id="selectDistinctCountryCount" resultType="int">
+        SELECT count(distinct nation_nm) FROM country;
+    </select>
+
+    <select id = "selectDistinctCountry" resultType="java.lang.String">
+        SELECT distinct(nation_nm) FROM country  LIMIT ${start}, ${limit};
+    </select>
+
+    <select id = "selectCountryCovidInfoByDay" resultType="com.covid.web.dto.CountryCovidInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+        SELECT * FROM country WHERE date(std_day) = date(#{stdDay});
+    </select>
+
+    <select id = "selectMostRecentCountryCovidInfoByDay" resultType="com.covid.web.dto.CountryCovidInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+        SELECT *
+        FROM (
+            SELECT *
+            FROM country
+            WHERE (nation_nm, std_day) in (
+                SELECT nation_nm, max(std_day) as std_day
+                FROM country
+                WHERE date(std_day) = date(#{stdDay}) AND nation_nm = #{countryName}
+                GROUP BY nation_nm
+            )
+        ) AS temp
+        GROUP BY nation_nm
+    </select>
+
+    <insert id = "insertCountryCovidInfo" parameterType="com.covid.web.dto.CountryCovidInfo">
+        INSERT INTO country (insert_date, seq, area_nm, area_nm_en, area_nm_cn, nation_nm, nation_nm_en, nation_nm_cn, nat_def_cnt, nat_death_cnt, nat_death_rate, std_day, create_dt, update_dt)
+        VALUES(NOW(), #{seq}, #{areaNm}, #{areaNmEn}, #{areaNmCn}, #{nationNm}, #{nationNmEn}, #{nationNmCn}, #{natDefCnt}, #{natDeathCnt}, #{natDeathRate}, #{stdDay}, #{createDt}, #{updateDt})
+    </insert>
+
+    <delete id="deleteAllCountryCovidInfoByDay">
+        DELETE FROM country WHERE date(std_day) = date(#{stdDay});
+    </delete>
+</mapper>

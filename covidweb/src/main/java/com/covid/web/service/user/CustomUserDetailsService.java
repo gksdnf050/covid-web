@@ -1,5 +1,8 @@
-package com.covid.web.service.security;
+package com.covid.web.service.user;
 
+import com.covid.web.dto.user.CustomUserDetails;
+import com.covid.web.dto.user.UserEntity;
+import com.covid.web.dto.user.UserRoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

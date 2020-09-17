@@ -1,6 +1,6 @@
 package com.covid.web.util;
 
-import com.covid.web.dto.ApiResponseDto;
+import com.covid.web.dto.ApiResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class KakaoUtil {
     @Value("${open-api.key.kakao-rest-api-key}")
     private String kakaoRestApiKey;
 
-    public ApiResponseDto KakaolocalSearchApi(String query, String size) throws IOException {
+    public ApiResponse KakaolocalSearchApi(String query, String size) throws IOException {
         StringBuilder apiURL = new StringBuilder("https://dapi.kakao.com/v2/local/search/keyword.json");
         apiURL.append("?size=" + size);
         apiURL.append("&query=" + encode(query));

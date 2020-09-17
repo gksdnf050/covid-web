@@ -2,6 +2,12 @@ const searchFormElem = $(".search-form");   // 주소 검색 form elem
 const searchInputElem = $('.search-form__search-input'); // 주소 검색 input 요소
 const suggestionsElem = $(".search-form__suggestions"); // 추천 검색어 container
 const clearButtonElem = $(".search-form__clear-button");    // 입력 내용 제거 요소
+const sidebarContent = $(".expandable-sidebar__content");
+const upIcon = "<i class='fas fa-arrow-up up' style='font-size:15px'></i>";
+const downIcon = "<i class='fas fa-arrow-down down' style='font-size:15px'></i>";
+const tbodyElement = $("tbody");
+const PAGE_MENU_LIMIT = 20;   // 한 페이지에 나타낼 수 있는 메뉴의 개수 제한
+
 const mapElem = $("#map");  //  네이버 맵
 
 const INPUT_EVENT_MIN_INTERVAL = 10;   // input 태그의 이벤트 발생 최소 간격
@@ -50,6 +56,82 @@ function hideMarker(map, marker) {
     marker.setMap(null);
 }
 
+function menuOnClinkHandler() {    // 감염현황의 메뉴바 클릭 이벤트  // TODO : 람다식으로 전달할 경우와 정의된 함수를 전달하는 경우 this가 차이남 왜 차이 나는지 확인
+    if($(this).hasClass("covid-detail-menu"))
+        $(".covid-detail-menu").removeClass("active");
+    else if ($(this).hasClass("covid-menu"))
+        $(".covid-menu").removeClass("active");
+    else if($(this).hasClass("page-menu"))
+        $(".page-menu").removeClass("active");
+
+    $(this).addClass("active");
+}
+
+function pageMenuOnClickHandler(){
+    const url = $(this).data("url");
+    const menuUrl = $(this).data("menu-url");
+    const menuType = $(this).data("menu-type");
+    const pageNo = $(this).text();
+
+    createCovidDetailMenuByUrl(url, menuUrl, menuType, pageNo, PAGE_MENU_LIMIT);
+}
+
+function detailMenuOnClickHandler(){
+    const url = $(this).data("url");
+    const paramValue = $(this).text()
+    const menuType = $(this).data("type");
+    const uri = `${url}?${menuType}=${paramValue}`
+
+    let propertyDictionary, diffExclude, displayExclude;
+
+    if(menuType === "city"){
+        propertyDictionary = {    // 각 프로퍼티의 의미를 나타내는 객체
+            stdDay : "기준 일시",
+            defCnt : "확진자 수",
+            localOccCnt : "지역감염 수",
+            overFlowCnt : "해외유입 수",
+            isolIngCnt : "격리 중인 환자 수",
+            deathCnt : "사망자 수",
+            gubun : "시도명",
+            incDec : "전일 대비 증감 수",
+            isolClearCnt : "격리 해제 수",
+            qurRate : "10만명당 발생률",
+        }
+        diffExclude = ["qurRate", "stdDay", "gubun"]; // 어제와 오늘의 데이터를 비교하지 않을 property
+        displayExclude = ['seq', 'gubunCn', 'gubunEn', "createDt", "updateDt"];   // 표시하지 않을 property
+    }else if(menuType === "genAndAge"){
+        propertyDictionary = {
+            gubun : "구분(성별, 연령별)",
+            confCase : "확진자 수",
+            confCaseRate : "확진률",
+            death : "사망자 수",
+            deathRate : "사망률",
+            criticalRate : "치명률",
+        }
+        diffExclude = ["gubun", "confCaseRate", "deathRate", "criticalRate"] // 어제와 오늘의 데이터를 비교하지 않을 property
+        displayExclude =  ["seq", "createDt", "updateDt"];   // 표시하지 않을 property
+    }else if(menuType === "country"){
+        propertyDictionary = {
+            stdDay: "기준일시",
+            areaNm : "지역명",
+            nationNm : "국가명",
+            natDefCnt : "국가별 확진자 수",
+            natDeathCnt :  "국가별 사망자 수",
+            natDeathRate : "확진률 대비 사망률"
+        }
+        diffExclude = ["stdDay", "areaNm", "nationNm", "natDeathRate"] // 어제와 오늘의 데이터를 비교하지 않을 property
+        displayExclude =  ["seq", "createDt", "updateDt", "areaNmEn", "areaNmCn", "nationNmEn", "nationNmCn"];   // 표시하지 않을 property
+    }
+
+    requestCovidInfo(uri,propertyDictionary, displayExclude, diffExclude);
+}
+
+$(document).on("click", ".menu", menuOnClinkHandler)    // 이후에 ".menu"에 해당 하는 element가 생겨도 이벤트가 하도록 동적 바인딩을 위해 $(document).on("event name", "selector", handler) 형식 사용
+
+$(document).on("click", ".page-menu", pageMenuOnClickHandler)
+
+$(document).on("click", ".covid-detail-menu", detailMenuOnClickHandler)
+
 function createMaker(contentString, iconFileName, x, y){
     const marker = new naver.maps.Marker({
         position: new naver.maps.LatLng(y, x),
@@ -67,7 +149,7 @@ function createMaker(contentString, iconFileName, x, y){
         content: contentString
     });
 
-    naver.maps.Event.addListener(marker, "click", function(e) {
+    naver.maps.Event.addListener(marker, "click", function() {
         if (infowindow.getMap()) {
             infowindow.close();
         } else {
@@ -89,12 +171,146 @@ function loading(flag){ // 로딩창을 생성 또는 삭제하는 함수
     }
 }
 
+function requestCovidInfo(url, propertyDictionary, displayExclude, diffExclude){
+    $.ajax({
+        type : "GET",
+        url : url,
+        success : function (response) {
+            const today = response.today;   // 어제의 국내 확진자 정보
+            const yesterday = response.yesterday;   // 오늘의 국내 확진자 정보
+
+            tbodyElement.html("");
+            $(".covid-detail-bar").remove();    // "시도별", "성별/연령별", "국가별" 메뉴를 클릭했을 때 생기는 메뉴들을 삭제함.
+            $(".page-bar").remove();    // "시도별", "성별/연령별", "국가별" 메뉴를 클릭했을 때 생기는 메뉴들을 삭제함.
+
+            for(let property in today){ // 각 프로퍼티를 순회
+                if(!displayExclude.includes(property)){  // 표시할 property인지 확인
+                    let todayValue = today[property];   // 해당 property에 대한 오늘의 데이터
+                    let yesterdayValue = yesterday[property];   // 해당 property에 대한 어제의 데이터
+
+                    let diffAbs = "", icon = "";
+                    const diff = todayValue - yesterdayValue;   // 어제와 오늘 데이터의 차이
+
+                    if(!diffExclude.includes(property)) {   // 어제와 오늘의 데이터에 차이가 있고, 데이터를 비교할 property에 해당한다면
+                        if(diff !== 0)
+                            diffAbs = Math.abs(diff);
+
+                        if(diff > 0) icon = upIcon; else if(diff < 0) icon = downIcon; else icon = "";    // 오늘 데이터의 값이 더 큰지, 작은지, 오늘과 어제의 차이가 없는지에 따라 icon을 결정
+                    }
+
+                    tbodyElement.append([   // 정보를 테이블에 추가
+                        `<tr class="row100 body covidInfo">`,
+                            `<td class="cell100 column1">${propertyDictionary[property]}</td>`,
+                            `<td class="cell100 column2">${todayValue} ${icon} ${diffAbs}</td>`,
+                        `</tr>`].join("")
+                    )
+                }
+            }
+        },
+        error : function () {
+            console.log("fail to request covid info")
+        }
+    })
+}
+
+$(".domestic").on("click", function () {
+    const propertyDictionary = {    // 각 프로퍼티의 의미를 나타내는 객체
+        stateDt : "기준일",
+        stateTime : "기준시간",
+        decideCnt : "확진자 수",
+        clearCnt : "격리 해제 수",
+        examCnt : "검사 진행 수",
+        deathCnt : "사망자 수",
+        careCnt : "치료중 환자 수",
+        resutlNegCnt : "결과 음성 수",
+        accExamCnt : "누적 검사 수",
+        accExamCompCnt : "누적 검사 완료 수",
+        accDefRate : "누적 확진율"
+    }
+    const diffExclude = ["stateDt", "stateTime", "accDefRate"]; // 어제와 오늘의 데이터를 비교하지 않을 property (기준일, 기준시간, 누적 확진율 -> 누적 확진율은 값의 차이가 소수점으로 길게 나와서 제외)
+    const displayExclude = ['updateDt', 'seq', 'createDt'];   // 표시하지 않을 property
+    const url = "/api/domesticInfo";
+    requestCovidInfo(url, propertyDictionary, displayExclude, diffExclude);
+})
+
+function createCovidDetailMenuByUrl(url, menuUrl, menuType, pageNo, numOfRows){
+    const uri = `${url}?pageNo=${[pageNo]}&numOfRows=${numOfRows}`;
+
+    $.ajax({
+        type : "GET",
+        url : uri,
+        success : function (response) {
+            const totalCount = response.totalCount;
+            const pageCount = Math.ceil(totalCount / PAGE_MENU_LIMIT);
+            const items = response.items;
+            let listCnt = 0;
+            let cellCnt = 4;    // 한 줄에 들어갈 메뉴의 개수
+
+            $(".covidInfo").remove();   // covid 정보를 표시하는 테이블의 tr 태그 모두 지움
+            $(".covid-detail-bar").remove();    // "시도별", "성별/연령별", "국가별" 메뉴를 클릭했을 때 생기는 메뉴들을 삭제함.
+            $(".page-bar").remove();    // "시도별", "성별/연령별", "국가별" 메뉴를 클릭했을 때 생기는 메뉴들을 삭제함.
+
+            sidebarContent.append([
+                `<nav class ="menu-bar covid-detail-bar">`,
+                `</nav>`].join(""));
+
+            const menuBar = $(".covid-detail-bar");
+
+            for(let i = 0; i < items.length; i++){
+                if (i % cellCnt === 0){
+                    menuBar.append([
+                        `<ul class="menu-list covid-detail-list">`,
+                        `</ul>`].join(""))
+
+                    listCnt++;
+                }
+
+                $(`.covid-detail-list:nth-child(${listCnt})`).append(`<li class ="menu covid-detail-menu" data-type="${menuType}" data-url="${menuUrl}">${items[i]}</li>`);
+            }
+
+            if(pageCount > 1){
+                sidebarContent.append([
+                    `<nav class ="menu-bar page-bar">`,
+                        `<ul class="menu-list page-list">`,
+                        `</ul>`,
+                    `</nav>`].join(""));
+
+                const pageList = $(".page-list");
+
+                for(let i = 0; i < pageCount; i++){
+                    pageList.append(`<li class ="menu page-menu" data-menu-type="${menuType}" data-menu-url="${menuUrl}" data-url="${url}">${i + 1}</li>`)
+                }
+
+
+                $(".page-menu").removeClass("active");
+                $(`.page-menu:nth-child(${pageNo})`).addClass("active");
+            }
+        },
+        error : function () {
+            console.log("covid detail error")
+        }
+    })
+}
+$(".city").on("click", function () {
+    const pageNo = 1;
+    createCovidDetailMenuByUrl(`/api/city`, `/api/cityInfo`, "city", pageNo, PAGE_MENU_LIMIT)
+})
+$(".genAndAge").on("click", function () {
+    const pageNo = 1;
+    createCovidDetailMenuByUrl(`/api/genAndAge`, `/api/genAndAgeInfo`, "genAndAge", pageNo, PAGE_MENU_LIMIT)
+})
+$(".country").on("click", function () {
+    const pageNo = 1;
+    createCovidDetailMenuByUrl(`/api/country`, `/api/countryInfo`, "country", pageNo, PAGE_MENU_LIMIT)
+})
+
 async function initializer(mode){
     let restaurantLoaded = false;   // 안심식당 정보가 로드 되었는지를 나타내는 flag
     let hospitalLoaded = false; // 안심병원 정보가 로드 되었는지를 나타내는 flag
 
     $(`.sidebar__${mode}-mode`).addClass("active");
-
+    $(".menu")[0].click();  // 감염현황의 첫번째 메뉴 선택
+    
     loading(true)
     if(mode !== "hospital"){
         $.ajax({
@@ -103,6 +319,7 @@ async function initializer(mode){
             success : function (restaurantList) {
                 for(let restaurant of restaurantList){
                     const x = restaurant.x;
+
                     const y = restaurant.y;
 
                     const nullableList = [
@@ -240,7 +457,7 @@ searchFormElem.submit(function(event) {
     removeSuggestions();    // 추천 검색어 모두 삭제
 });
 
-function blurEventListener(event){
+function blurEventListener(){
     removeSuggestions();    // 추천 검색어 모두 삭제
     $(this).parent().removeClass('focus');  // form 태그의 focus 클래스를 제거하여 border 제거
 }
@@ -322,12 +539,12 @@ searchInputElem.on("propertyChange keyup paste focus", function(event){  // 입�
                     const suggestionElems = document.querySelectorAll('.search-form__suggestion')   // 모든 추천 검색어 선택
 
                     for(let suggestionElem of suggestionElems){ // 각각의 추천 검색어 요소에 대해 click, mouseenter, mouseleave 이벤트 핸들러를 등록한다.
-                        suggestionElem.addEventListener("mouseenter", (event) => {  // jquery의 on 메서드를 사용했을 때, mouseenter, mouseleave 이벤트가 자식 요소에도 발생하는 문제가 생겨서, document를 사용하여 이벤트 핸들러를 등록함.
+                        suggestionElem.addEventListener("mouseenter", () => {  // jquery의 on 메서드를 사용했을 때, mouseenter, mouseleave 이벤트가 자식 요소에도 발생하는 문제가 생겨서, document를 사용하여 이벤트 핸들러를 등록함.
                             suggestionElem.classList.add("selected")    // 해당 추천 검색어에 마우스가 올라오면 해당 요소에 selected class를 추가해서 선택 표시를 해준다.
                             searchInputElem.off("blur") // 추천 검색어를 클릭했을 때, searchInputElem의 blur 이벤트 핸들러가 동작하고, 추천 검색어가 모두 제거 되어, 추천 검색어의 click 이벤트 핸들러가 동작하지 않는 문제가 발생하여 추천 검색어에 마우스가 올라왔을 때에는 , searchInputElem의 blur 이벤트 핸들러를 잠시 제거한다.
                         })
 
-                        suggestionElem.addEventListener("mouseleave", (event) => {
+                        suggestionElem.addEventListener("mouseleave", () => {
                             suggestionElem.classList.remove("selected") // 해당 추천 검색어에서 마우스가 벗어나면 해당 요소에 selected class를 제거해서 선택 해제 표시를 해준다.
                             searchInputElem.on("blur", blurEventListener)   // 해당 추천 검색어에서 마우스가 벗어나면, 제거했던 searchInputElem의 blur 이벤트 핸들러를 다시 등록한다.
                         })

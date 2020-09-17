@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
+import com.covid.web.mapper.CovidRestaurantMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,13 +18,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.covid.web.dto.ApiResponseDto;
-import com.covid.web.dto.RestaurantDto;
-import com.covid.web.mapper.CovidMapper;
+import com.covid.web.dto.ApiResponse;
+import com.covid.web.dto.CovidRestaurant;
 
 @Component
 @PropertySource("classpath:application.properties")
-public class RestaurantUtil {
+public class CovidRestaurantUtil {
 
 	@Value("${open-api.key.covid-restaurant-api-key}")
 	private String covidRestaurantApiKey;
@@ -32,7 +32,7 @@ public class RestaurantUtil {
 	private KakaoUtil kakaoUtil;
 
 	@Autowired
-	CovidMapper covidMapper;
+	CovidRestaurantMapper restaurantMapper;
 
 	@Scheduled(cron = "0 0 0 * * *")	// 매일 00시에 실행
 	public void getCovidRestaurant() throws Exception {
@@ -41,13 +41,13 @@ public class RestaurantUtil {
 		int endIndex = 1000;
 		boolean isEnd = false;
 
-		covidMapper.deleteAllRestaurant();
-		covidMapper.alterRestaurantAutoIncrement();
+		restaurantMapper.deleteAllRestaurant();
+		restaurantMapper.alterRestaurantAutoIncrement();
 
 		while (!isEnd) {
-			ApiResponseDto apiResponseDto = covidRestaurant(Integer.toString(startIndex), Integer.toString(endIndex));
+			ApiResponse apiResponse = covidRestaurant(Integer.toString(startIndex), Integer.toString(endIndex));
 			// int responseCode = apiResponseDto.getCode();
-			String responseResult = apiResponseDto.getResult();
+			String responseResult = apiResponse.getResult();
 
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(responseResult);
@@ -58,7 +58,7 @@ public class RestaurantUtil {
 			for (int i = 0; i < parse_itemlist.size(); i++) {
 				JSONObject imsi = (JSONObject) parse_itemlist.get(i);
 
-				RestaurantDto dto = new RestaurantDto();
+				CovidRestaurant dto = new CovidRestaurant();
 				dto.setRestaurant((String) imsi.get("RELAX_RSTRNT_NM"));
 				dto.setRepresentative((String) imsi.get("RELAX_RSTRNT_REPRESENT"));
 				dto.setZipcode((String) imsi.get("RELAX_ZIPCODE"));
@@ -76,9 +76,8 @@ public class RestaurantUtil {
 				dto.setAdd1((String) imsi.get("RELAX_ADD1"));
 				dto.setAdd2((String) imsi.get("RELAX_ADD2"));
 
-				String query = imsi.get("RELAX_SI_NM") + " " + imsi.get("RELAX_SIDO_NM") + " "
-						+ imsi.get("RELAX_RSTRNT_NM");
-				ApiResponseDto apiDto = kakaoUtil.KakaolocalSearchApi(query, "1");
+				String query = imsi.get("RELAX_SI_NM") + " " + imsi.get("RELAX_SIDO_NM") + " " + imsi.get("RELAX_RSTRNT_NM");
+				ApiResponse apiDto = kakaoUtil.KakaolocalSearchApi(query, "1");
 				String resResult = apiDto.getResult();
 
 				Object oj = parser.parse(resResult);
@@ -94,7 +93,7 @@ public class RestaurantUtil {
 					dto.setY(null);
 				}
 
-				covidMapper.insertRestaurant(dto);
+				restaurantMapper.insertRestaurant(dto);
 			}
 
 			startIndex += requestSize;
@@ -105,7 +104,7 @@ public class RestaurantUtil {
 
 	}
 
-	public ApiResponseDto covidRestaurant(String startIndex, String endIndex) throws IOException {
+	public ApiResponse covidRestaurant(String startIndex, String endIndex) throws IOException {
 		StringBuilder urlBuilder = new StringBuilder("http://211.237.50.150:7080/openapi"); /* URL */
 		urlBuilder.append("/" + encode(covidRestaurantApiKey));
 		urlBuilder.append("/" + encode("json"));
@@ -119,8 +118,8 @@ public class RestaurantUtil {
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
 
-		ApiResponseDto apiResponseDto = getResultByResponse(conn);
+		ApiResponse apiResponse = getResultByResponse(conn);
 
-		return apiResponseDto;
+		return apiResponse;
 	}
 }

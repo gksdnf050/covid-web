@@ -1,4 +1,4 @@
-package com.covid.web.dto;
+package com.covid.web.dto.user;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDto {
+public class User {
     private int id;
     private String name;
     private String password;
@@ -16,7 +16,7 @@ public class UserDto {
     private Date createDate;
     private Date modifyDate;
 
-    public UserDto(String name, String password, String email) {
+    public User(String name, String password, String email) {
         this.name = name;
         this.password = password;
         this.email = email;

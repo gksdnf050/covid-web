@@ -1,6 +1,6 @@
 package com.covid.web.controller.api;
 
-import com.covid.web.dto.ApiResponseDto;
+import com.covid.web.dto.ApiResponse;
 import com.covid.web.util.KakaoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +20,10 @@ public class AddressSearchController {
     public String localSearch(@RequestParam(name = "query", required = true) String query) throws IOException {
         String size = "10"; // 검색 결과 출력 건수 지정
 
-        ApiResponseDto apiResponseDto = kakaoUtil.KakaolocalSearchApi(query, size);
+        ApiResponse apiResponse = kakaoUtil.KakaolocalSearchApi(query, size);
 
-        int responseCode = apiResponseDto.getCode();
-        String responseResult = apiResponseDto.getResult();
+        int responseCode = apiResponse.getCode();
+        String responseResult = apiResponse.getResult();
 
         return responseResult;
     }
@@ -32,10 +32,10 @@ public class AddressSearchController {
     public String addressToPoint(@RequestParam(name = "query", required = true) String query) throws IOException{
         String size = "1"; // 검색 결과 출력 건수 지정
 
-        ApiResponseDto apiResponseDto = kakaoUtil.KakaolocalSearchApi(query, size);
+        ApiResponse apiResponse = kakaoUtil.KakaolocalSearchApi(query, size);
 
-        int responseCode = apiResponseDto.getCode();
-        String responseResult = apiResponseDto.getResult();
+        int responseCode = apiResponse.getCode();
+        String responseResult = apiResponse.getResult();
 
         return responseResult;
     }

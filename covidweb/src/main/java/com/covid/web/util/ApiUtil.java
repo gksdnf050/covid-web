@@ -1,6 +1,6 @@
 package com.covid.web.util;
 
-import com.covid.web.dto.ApiResponseDto;
+import com.covid.web.dto.ApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
@@ -12,11 +12,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
 public class ApiUtil {
-	public static ApiResponseDto getResultByResponse(HttpURLConnection conn) throws IOException {
+	public static ApiResponse getResultByResponse(HttpURLConnection conn) throws IOException {
 		BufferedReader bufferedReader;
 
 		if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
@@ -37,7 +38,7 @@ public class ApiUtil {
 		int code = conn.getResponseCode();
 		String result = stringBuffer.toString();
 
-		return new ApiResponseDto(code, result);
+		return new ApiResponse(code, result);
 	}
 
 	public static Map<String, Object> jsonToMap(String jsonStr) throws JsonProcessingException {
@@ -47,14 +48,29 @@ public class ApiUtil {
 
 	public static Date stringToDate(String dateStr, String format) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-		Date parsedDate = dateFormat.parse(dateStr);
+		return dateFormat.parse(dateStr);
+	}
 
-		return parsedDate;
+	public static String dateToString(Date date, String format) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		return dateFormat.format(date);
 	}
 
 	public static String xmlToJson(String xmlString, boolean keepStrings){
 		JSONObject xmlJSONObj = XML.toJSONObject(xmlString, keepStrings);
 
 		return xmlJSONObj.toString(4);
+	}
+
+	public static Date plusDate(Date date, int day){
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, day);
+
+		return cal.getTime();
+	}
+
+	public static Object mapToDto(Map<String, Object> map, Class<?> classType){	// https://zorba91.tistory.com/28 참조
+		final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+		return mapper.convertValue(map, classType);
 	}
 }

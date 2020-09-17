@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @ToString
 @NoArgsConstructor
-public class HospitalDto {
+public class CovidHospital {
     private String hospital;    // 기관명
     private String sido;    // 시도명
     private String sggu;    // 시군구명
@@ -22,7 +22,7 @@ public class HospitalDto {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date operableDate;  // 운영가능일자
 
-    public HospitalDto(String hospital, String sido, String sggu, String selectionType, String tel, String typeCode, String x, String y, Date operableDate) {
+    public CovidHospital(String hospital, String sido, String sggu, String selectionType, String tel, String typeCode, String x, String y, Date operableDate) {
         this.hospital = hospital;
         this.sido = sido;
         this.sggu = sggu;

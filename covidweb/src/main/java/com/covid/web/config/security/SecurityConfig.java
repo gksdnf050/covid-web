@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.covid.web.service.security.CustomUserDetailsService;
+import com.covid.web.service.user.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity

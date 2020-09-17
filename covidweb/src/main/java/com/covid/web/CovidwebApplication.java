@@ -19,14 +19,22 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 // 프론트 : 전체, 병원, 식당 메뉴 구현
 // 프론트 : 회원가입 페이지 만들기
 // 프론트 : 병원, 식당에 따라 마커 이미지 변경
+// 프론트 : 감염현황에서 상세메뉴를 클릭했을 때 메뉴의 active class까지 지우는 것 해결하기
 
 // TODO : 백엔드 : 주소 변환 안되는 것 처리.
 // TODO : 백엔드 : 확진자 정보 API 요청 구현 및 Controller 구현
+// TODO : 백엔드 : resources/mapper 안의 다른 디렉토리에 xml 파일을 넣어두면 인식하지 못하는 에러 처리
+// TODO : 백엔드 : CovidInfo Api의 updateDt 값 확인 (현재 null값만 오는데 어떤 형식으로 오는지 확인 후 dto에 jsonFormat 추가)
+// TODO : 백엔드 : @JsonFormat을 지정한 필드에 null도 들어갈 수 있도록 처리
+// TODO : 백엔드 : util의 DB로직 Service로 옮기기
+// TODO : 백엔드 : CovidInfoController와 CovidInfoService에서 반복되는 코드 줄이는 방법 생각
+// TODO : 백엔드  : CovidInfo Api는 하루에 한번만 update 되는 건지 확인(domestic 10시, city 10시, age 14시, country 11시 반)
+// TODO : 백엔드 : 조회할 때 ORDER BY 필요한 query 없는 지 확인
 
 // TODO : 프론트 : 확진자 정보 표시 구현
 // TODO : 프론트 : 마커 정보 표시 꾸미기
 // TODO : 프론트 : 출처 표시
-
+// TODO : 프론트 : 확진자 정보에서 확률은 업 다운 아이콘만 표시
 @EnableScheduling
 @SpringBootApplication
 @EnableConfigurationProperties(OpenApiSetting.class)	// https://javacan.tistory.com/entry/springboot-configuration-properties-class 참조

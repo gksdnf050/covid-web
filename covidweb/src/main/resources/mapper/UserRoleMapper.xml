@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.covid.web.mapper.UserRoleMapper">
+<mapper namespace="com.covid.web.mapper.user.UserRoleMapper">
 	<select id="getRolesByEmail"
-		resultType="com.covid.web.dto.UserRoleDto">
+		resultType="com.covid.web.dto.user.UserRole">
 		SELECT ur.id, ur.user_id, ur.role_name
 		FROM user_role ur JOIN `user` u ON ur.user_id = u.id
 		WHERE u.email = #{email}
 	</select>
 
-	<insert id = "insertUserRole" parameterType="com.covid.web.dto.UserRoleDto">
+	<insert id = "insertUserRole" parameterType="com.covid.web.dto.user.UserRole">
 		INSERT INTO `user_role`(user_id, role_name)
 		VALUES(#{userId}, #{roleName});
 	</insert>
