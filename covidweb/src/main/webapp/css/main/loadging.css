@@ -20,6 +20,7 @@ body {
     background: #3498db;
     border-radius: 5px;
     animation: load 1.8s ease-in-out infinite;
+    z-index: 4;
 }
 .loader:before, .loader:after {
     position: absolute;

@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
-        <title>Login</title>
+        <title>회원가입</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
@@ -22,32 +22,30 @@
         <div class="limiter">
             <div class="login-container">
                 <div class="login-wrap p-l-60 p-r-60 p-t-55 p-b-40">
-                    <form class="login-form validate-form flex-sb flex-w" method="post" action = "/authenticate">
-                        <span class="login-form__title p-b-32">로그인</span>
+                    <form class="login-form validate-form flex-sb flex-w" method="post" action = "/sign-up">
+                        <span class="login-form__title p-b-32">회원가입</span>
 
-                        <div class="input-wrap validate-input m-b-36" data-validate="아이디를 입력해주세요">
-                            <input class="input-wrap__input" type="text" name="username" placeholder="아이디">
+                        <div class="input-wrap validate-input m-b-15" data-validate="이름을 입력해주세요">
+                            <input class="input-wrap__input" type="text" name="name" placeholder="이름">
                             <span class="input-wrap__input-focus"></span>
                         </div>
 
-                        <div class="input-wrap validate-input m-b-12" data-validate="비밀번호를 입력해주세요">
+                        <div class="input-wrap validate-input m-b-15" data-validate="이메일을 입력해주세요">
+                            <input class="input-wrap__input" type="text" name="email" placeholder="이메일">
+                            <span class="input-wrap__input-focus"></span>
+                        </div>
+
+                        <div class="input-wrap validate-input m-b-15" data-validate="비밀번호를 입력해주세요">
                             <span class="btn-show-pass">
                                 <i class="fa fa-eye"></i>
                             </span>
                             <input class="input-wrap__input" type="password" name="password" placeholder="비밀번호">
                             <span class="input-wrap__input-focus"></span>
                         </div>
-			
-                        <div class="flex-sb-m w-full p-b-40">
-                            <div>
-                                <a href="/sign-up" class="txt3">Sign Up</a>
-                            </div>
-                            <div>
-                                <a href="#" class="txt3">Forgot Password?</a>
-                            </div>
-                        </div>
-                        <span class = "login-form__fail-msg p-b-15">${loginFailMsg}</span>
-                        <button class="login-form__login-btn">Login</button>
+
+                        <span class = "login-form__fail-msg">${signUpFailMsg}</span>
+
+                        <button class="login-form__login-btn m-t-30">Sign up</button>
                     </form>
                 </div>
             </div>

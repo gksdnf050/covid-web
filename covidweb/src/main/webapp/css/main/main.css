@@ -1,8 +1,20 @@
+body {
+    font-size: 13px;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+
+ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
 .none{
     display: none;
 }
 
 .dark-bg{
+    z-index: 3;
     width:100%;
     height:100%;
     position: absolute; /* 다른 요소들 위로 겹쳐질 수 있게함 */
@@ -14,30 +26,26 @@
 .dark-bg--strict{background-color:rgba(0, 0, 0, 0.8);}
 .dark-bg--lenient{background-color:rgba(0, 0, 0, 0.4);}
 
-.up{color: #ff6e43;}
-.down{color: #007eff;}
+.shadow-strict{box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);}  /* 테두리 그림자 효과 */
+.shadow-middle{box-shadow: 0 6px 8px rgba(0, 0, 0, 0.25);}
+.shadow-lenient{box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);}
 
+.up{color: #ff6e43;}    /* up icon 색상 */
+.down{color: #007eff;}  /* down icon 색상 */
+/************************* copyright *************************/
 .map_copyright div span{
     color : #9c9c9c !important;
 }
 
-.footer.px-4{
+.copyright{
     position: absolute;
-    top: 90%;
-    left: 83%;
+    bottom : 10px;
+    left: 70px;
+    color: black;
 }
+/************************************************************/
 
-.icon-copyright{
-    position: absolute;
-    top : 84%;
-    left: 86%;
-}
-body {
-    font-size: 13px;
-    font-family: 'Roboto', sans-serif;
-    overflow: hidden;
-}
-
+/*********************** LocalSearch *************************/
 .focus{
     /* focus를 얻으면 테두리 추가 */
     border: 1px solid #0475f4;
@@ -47,144 +55,6 @@ body {
     background: #eef7ff;
 }
 
-.info-window{
-    padding: 10px 10px 10px 10px;
-}
-
-ul{
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.sidebar {
-    position: absolute;
-    z-index: 1;
-    min-height: 100vh;
-    width: 60px;
-    background-color: #313443;
-    padding-top: 95px;
-    float: left;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);
-}
-
-.sidebar ul {
-    text-align: center;
-    color: white;
-}
-.sidebar ul li {
-    cursor: pointer;
-    transition: all ease-out 120ms;
-}
-
-.sidebar__link{
-    width: 100%;
-    height: 100%;
-}
-
-.menu-bar{
-    width : 400px;
-    text-align: center;
-    line-height: 38px;
-    background-color: #313443;
-    font-size : 14px;
-    color: #fff;
-    font-weight: bold;
-    margin-left: auto;
-    margin-right: auto;
-}
-.page-bar{
-    width: 300px;
-}
-
-.page-menu{
-    margin-right: 5px;
-}
-
-.menu-bar .menu-list{
-    border: 1px solid #ededed;
-    border-radius: 5px;
-    display: table;
-    table-layout: fixed;
-    height : 40px;
-}
-.menu{
-    width : 100px;
-    display: table-cell;
-    border-left : 1px solid #ededed;
-    cursor: pointer;
-    font-size: 11px;
-    vertical-align: middle;
-}
-
-.menu:hover{
-    color: #d0cfcc;
-}
-
-.menu.active{
-    background-color: #fff;
-    color: #313443;
-    border-radius: 5px;
-}
-
-.sidebar ul li i {
-    display: block;
-    font-size: 24px;
-    transition: all ease 450ms;
-    line-height: 80px;
-}
-.sidebar ul li .tooltip {
-    display: inline-block;
-    position: absolute;
-    background-color: #313443;
-    padding: 8px 15px;
-    border-radius: 3px;
-    margin-top: -55px;
-    left: 90px;
-    opacity: 0;
-    visibility: hidden;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    text-align: center;
-    width: 100px;
-}
-.sidebar ul li .tooltip:before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: -4px;
-    top: 10px;
-    transform: rotate(45deg);
-    width: 10px;
-    height: 10px;
-    background-color: inherit;
-}
-.sidebar ul li:hover {
-    background-color: #22252e;
-}
-.sidebar ul li:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-.sidebar ul li.active {
-    background-color: #22252e;
-}
-.sidebar ul li.active i {
-    color: #98d7ec;
-}
-
-.sidebar__link > *{
-    color: #fff;
-}
-
-.logout{
-    margin-top: 53vh;
-}
-
-.covid-map{
-    /* 화면 전체를 맵으로 */
-    width:100%;
-    height:100%;
-}
 
 .search-form {
     /* instance search를 맵 위에 그리기 위한 속성 */
@@ -195,7 +65,6 @@ ul{
 
     width: 350px;
     border-radius: 10px;    /* 테두리가 동그란 모양 */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);  /* 테두리 그림자 효과 */
     background: #fff;   /* 배경을 하얀색으로 (배경을 지정해주지 않으면 투명하게 나타남)*/
 }
 
@@ -285,4 +154,155 @@ ul{
 .search-form__search-input::-webkit-search-results-button,
 .search-form__search-input::-webkit-search-results-decoration {
     display: none;
+}
+/************************************************************/
+
+/*************************** Map ****************************/
+
+.info-window{
+    padding: 10px 10px 10px 10px;
+}
+
+.covid-map{
+    /* 화면 전체를 맵으로 */
+    width:100%;
+    height:100%;
+}
+
+/************************************************************/
+
+/************************ 왼쪽 sidebar *******************************/
+.sidebar {
+    position: absolute;
+    z-index: 1;
+    min-height: 100vh;
+    width: 60px;
+    background-color: #313443;
+    padding-top: 95px;
+    float: left;
+}
+
+.sidebar ul {
+    text-align: center;
+    color: white;
+}
+.sidebar ul li {
+    cursor: pointer;
+    transition: all ease-out 120ms;
+}
+
+.sidebar ul li i {
+    display: block;
+    font-size: 24px;
+    transition: all ease 450ms;
+    line-height: 80px;
+}
+.sidebar ul li .tooltip {
+    display: inline-block;
+    position: absolute;
+    background-color: #313443;
+    padding: 8px 15px;
+    border-radius: 3px;
+    margin-top: -55px;
+    left: 90px;
+    opacity: 0;
+    visibility: hidden;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    width: 100px;
+}
+.sidebar ul li .tooltip:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -4px;
+    top: 10px;
+    transform: rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: inherit;
+}
+.sidebar ul li:hover {
+    background-color: #22252e;
+}
+.sidebar ul li:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+.sidebar ul li.active {
+    background-color: #22252e;
+}
+.sidebar ul li.active i {
+    color: #98d7ec;
+}
+
+.sidebar__link > *{
+    color: #fff;
+}
+
+.sidebar__link{
+    width: 100%;
+    height: 100%;
+}
+
+.logout{
+    margin-top: 53vh;
+}
+/************************************************************/
+
+.menu-bar{
+    width : 400px;
+    text-align: center;
+    line-height: 38px;
+    background-color: #313443;
+    font-size : 14px;
+    color: #fff;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+}
+
+.page-bar{
+    width: 300px;
+    margin-top: 10px;
+}
+
+.page-menu{
+    margin-right: 5px;
+}
+
+.menu-bar .menu-list{
+    border: 1px solid #ededed;
+    border-radius: 5px;
+    display: table;
+    table-layout: fixed;
+    height : 40px;
+}
+
+.menu{
+    width : 100px;
+    display: table-cell;
+    border-left : 1px solid #ededed;
+    cursor: pointer;
+    font-size: 11px;
+    vertical-align: middle;
+}
+
+.menu:hover{
+    color: #d0cfcc;
+}
+
+.menu.active{
+    background-color: #fff;
+    color: #313443;
+}
+
+.menu:first-child.active{   /* 첫번째 메뉴는 왼쪽에만 radius 효과를 줌 */
+    border-radius: 5px 0px 0px 5px;
+}
+
+.menu:last-child.active{    /* 마지막 메뉴는 오른쪽에만 radius 효과를 줌 */
+    border-radius: 0px 5px 5px 0px;
 }

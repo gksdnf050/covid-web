@@ -11,24 +11,23 @@
 <html>
     <head>
         <title>covidWeb</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
         <link rel="stylesheet" href="/css/main/main.css">
         <link rel="stylesheet" href="/css/main/loadging.css">
-        <link rel="stylesheet" href="/css/main/sidebar.css">
+        <link rel="stylesheet" href="/css/main/infectionInfo.css">
         <link rel="stylesheet" href="/css/main/table/main.css">
         <link rel="stylesheet" href="/css/main/table/util.css">
         <link rel="stylesheet" href="/css/main/table/perfect-scrollbar.css">
-
-
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
 
     <body>
-        <nav class="expandable-sidebar order-last">   <!-- https://colorlib.com/wp/bootstrap-sidebar/ -->
+        <nav class="expandable-sidebar shadow-middle order-last">   <!-- https://colorlib.com/wp/bootstrap-sidebar/ -->
             <div class="custom-menu">
-                <button type="button" class="expandable-sidebar__sidebar-collapse btn btn-primary">
+                <button type="button" class="expandable-sidebar__sidebar-collapse shadow-strict btn btn-primary">
                 </button>
             </div>
 
@@ -42,10 +41,10 @@
                 </ul>
             </nav>
 
-            <div class = "expandable-sidebar__content p-t-10">
+            <div class = "expandable-sidebar__content m-t-15">
                 <div class="wrap-table">
                     <div class="table ver1">
-                        <div class="table-body js-pscroll">
+                        <div class="table-body">
                             <table>
                                 <tbody>
 
@@ -55,9 +54,10 @@
                     </div>
                 </div>
             </div>
+
         </nav>
 
-        <nav class="sidebar">   <!-- https://freefrontend.com/css-menu/ -->
+        <nav class="sidebar shadow-strict">   <!-- https://freefrontend.com/css-menu/ -->
             <ul>
                 <li class="sidebar__all-mode">
                     <a class ="sidebar__link" href="/main?mode=all">
@@ -86,7 +86,7 @@
             </ul>
         </nav>
 
-        <form class="search-form">
+        <form class="search-form shadow-lenient">
             <button type="submit" class="search-button">    <%-- submit 버튼 --%>
                 <svg class="submit-button">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
@@ -106,10 +106,11 @@
         <div id="map" class = "covid-map"></div>
 
         <!-- copyright -->
-        <p class = "icon-copyright">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></p>
-
-        <div class="footer px-4">
-            <p style="text-align: center; color: black">Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib.com</a></p>
+        <div class = "copyright">
+            <p><strong>아이콘 : </strong> <a href="http://www.flaticon.com">Flaticon</a></p>
+            <p><strong>사이드바 : </strong> <a href="http://www.Colorlib.com">Colorlib</a></p>
+            <p><strong>지도 : </strong><a href="https://www.ncloud.com/">Ncloud</a></p>
+            <p><strong>지역 검색 : </strong><a href="https://developers.kakao.com/">Kakao</a></p>
         </div>
 
         <div class="loading-bg dark-bg dark-bg--lenient none"></div>
@@ -122,22 +123,17 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=h76lgnlg6i"></script>  <%-- 네이버 맵 --%>
         <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=h76lgnlg6i&submodules=geocoder"></script>
-        <script src="/js/main/main.js"></script>
-        <script src="/js/main/sidebar.js"></script>
         <script src="/js/main/table/perfect-scrollbar.min.js"></script>
+
+        <script src="/js/main/main.js"></script>
+        <script src="/js/main/infectionInfo.js"></script>
+        <script src="/js/main/map.js"></script>
+        <script src="/js/main/localSearch.js"></script>
 
         <script>
             $(document).ready(() => {
-                $('.js-pscroll').each(function(){
-                    var ps = new PerfectScrollbar(this);
-
-                    $(window).on('resize', function(){
-                        ps.update();
-                    })
-                });
-
                 const mode = "<%=request.getAttribute("mode")%>";
-                initializer(mode); // todo : 주석 해제
+                initializer(mode);
             })
         </script>
     </body>

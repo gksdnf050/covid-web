@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.covid.web.mapper.infectionInfo.CountryInfoMapper">
+    <select id="selectDistinctCategoryCount" resultType="int">
+        SELECT count(distinct nation_nm)
+        FROM country;
+    </select>
+
+    <select id = "selectDistinctCategories" resultType="java.lang.String">
+        SELECT distinct(nation_nm)
+        FROM country
+        ORDER BY nation_nm
+        LIMIT ${start}, ${limit};
+    </select>
+
+    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.dto.infectionInfo.CountryInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+        SELECT *
+        FROM (
+            SELECT *
+            FROM country
+            WHERE (nation_nm, std_day) in (
+                SELECT nation_nm, max(std_day) as std_day
+                FROM country
+                WHERE date(std_day) = date(#{stdDay}) AND nation_nm = #{countryName}
+                GROUP BY nation_nm
+            )
+        ) AS temp
+        GROUP BY nation_nm
+    </select>
+
+    <insert id = "insertInfo" parameterType="com.covid.web.dto.infectionInfo.CountryInfo">
+        INSERT INTO country (insert_date, seq, area_nm, area_nm_en, area_nm_cn, nation_nm, nation_nm_en, nation_nm_cn, nat_def_cnt, nat_death_cnt, nat_death_rate, std_day, create_dt, update_dt)
+        VALUES(NOW(), #{seq}, #{areaNm}, #{areaNmEn}, #{areaNmCn}, #{nationNm}, #{nationNmEn}, #{nationNmCn}, #{natDefCnt}, #{natDeathCnt}, #{natDeathRate}, #{stdDay}, #{createDt}, #{updateDt})
+    </insert>
+
+    <delete id="deleteAllInfoByDay">
+        DELETE
+        FROM country
+        WHERE date(std_day) = date(#{stdDay});
+    </delete>
+</mapper>

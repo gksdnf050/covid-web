@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.covid.web.mapper.infectionInfo.DomesticInfoMapper">
+    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.dto.infectionInfo.DomesticInfo">
+        SELECT *
+        FROM domestic
+        WHERE date(state_dt) = date(#{stateDate})
+        ORDER BY state_time
+        DESC LIMIT 1; <!-- 기준일이 stateDate인 row중 기준 시간이 최근인 row를 조회 -->
+    </select>
+
+    <insert id = "insertInfo" parameterType="com.covid.web.dto.infectionInfo.DomesticInfo">
+        INSERT INTO domestic (insert_date, seq, state_dt, state_time, decide_cnt, clear_cnt, exam_cnt, death_cnt, care_cnt, resutl_neg_cnt, acc_exam_cnt, acc_exam_comp_cnt, acc_def_rate, create_dt, update_dt)
+        VALUES(NOW(), #{seq}, #{stateDt}, #{stateTime}, #{decideCnt}, #{clearCnt}, #{examCnt}, #{deathCnt}, #{careCnt}, #{resutlNegCnt}, #{accExamCnt}, #{accExamCompCnt}, #{accDefRate}, #{createDt}, #{updateDt})
+    </insert>
+
+    <delete id = "deleteAllInfoByDay">
+        DELETE
+        FROM domestic
+        WHERE date(state_dt) = date(#{stateDate});
+    </delete>
+</mapper>

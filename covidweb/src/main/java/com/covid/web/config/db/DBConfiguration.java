@@ -20,7 +20,7 @@ public class DBConfiguration {
 
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis-config.xml"));
-        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*/*.xml"));
         return sessionFactory.getObject();
     }
 

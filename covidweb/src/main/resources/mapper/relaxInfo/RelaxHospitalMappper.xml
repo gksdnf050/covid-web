@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.covid.web.mapper.relaxInfo.RelaxHospitalMappper">
+    <select id = "getAllHospital" resultType="com.covid.web.dto.relaxInfo.RelaxHospital">
+        SELECT *
+        FROM hospital
+        WHERE x IS NOT NULL AND y IS NOT NULL;
+    </select>
+
+    <insert id="insertInfo" parameterType="com.covid.web.dto.relaxInfo.RelaxHospital">
+        INSERT INTO hospital(insert_date, yadm_nm, sido_nm, sggu_nm, hosp_ty_tp_Cd, tel_no, adt_fr_dd, spcl_adm_ty_cd, x, y)
+        VALUES(NOW(), #{yadmNm}, #{sidoNm}, #{sgguNm}, #{hospTyTpCd}, #{telno}, #{adtFrDd}, #{spclAdmTyCd}, #{x}, #{y});
+    </insert>
+
+    <delete id = "deleteAll">
+        DELETE FROM hospital;
+    </delete>
+
+    <update id = "initializeAutoIncrement">
+        ALTER TABLE hospital AUTO_INCREMENT = 1;
+    </update>
+</mapper>

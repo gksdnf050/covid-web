@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.covid.web.mapper.infectionInfo.CityInfoMapper">
+    <select id="selectDistinctCategoryCount" resultType="int">
+        SELECT count(distinct gubun)
+        FROM city;
+    </select>
+
+    <select id = "selectDistinctCategories" resultType="java.lang.String">
+        SELECT distinct(gubun)
+        FROM city
+        ORDER BY gubun
+        LIMIT ${start}, ${limit};
+    </select>
+
+    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.dto.infectionInfo.CityInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+        SELECT *
+        FROM (
+            SELECT *
+            FROM city
+            WHERE (gubun, std_day) in (
+                SELECT gubun, max(std_day) as std_day
+                FROM city
+                WHERE date(std_day) = date(#{stdDay}) AND gubun = #{cityName}
+                GROUP BY gubun
+            )
+        ) AS temp
+        GROUP BY gubun
+    </select>
+
+    <insert id = "insertInfo" parameterType="com.covid.web.dto.infectionInfo.CityInfo">
+        INSERT INTO city (insert_date, def_cnt, local_occ_cnt, over_flow_cnt, isol_ing_cnt, seq, death_cnt, gubun, gubun_cn, gubun_en, inc_dec, isol_clear_cnt, qur_rate, create_dt, std_day, update_dt)
+        VALUES(NOW(), #{defCnt}, #{localOccCnt}, #{overFlowCnt}, #{isolIngCnt}, #{seq}, #{deathCnt}, #{gubun}, #{gubunCn}, #{gubunEn}, #{incDec}, #{isolClearCnt}, #{qurRate}, #{createDt}, #{stdDay}, #{updateDt})
+    </insert>
+
+    <delete id = "deleteAllInfoByDay">
+        DELETE
+        FROM city
+        WHERE date(std_day) = date(#{stdDay});
+    </delete>
+</mapper>
