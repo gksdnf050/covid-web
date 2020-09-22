@@ -1,12 +1,13 @@
 CREATE TABLE hospital(
 	id int AUTO_INCREMENT PRIMARY KEY,
-	hospital varchar(50) NOT NULL COMMENT '기관명',
-    sido varchar(30) DEFAULT NULL COMMENT '시도명',
-    sggu varchar(30) DEFAULT NULL COMMENT '시군구명',
-    selection_type varchar(10) DEFAULT NULL COMMENT '선정유형',
-    tel varchar(20) DEFAULT NULL COMMENT '전화번호',
-    operable_date datetime DEFAULT NULL COMMENT '운영가능일자',
-    type_code varchar(10) DEFAULT NULL COMMENT '구분코드',
+    insert_date datetime NOT NULL COMMENT '해당 row를 테이블에 삽입한 시간',
+	yadm_nm varchar(50) NOT NULL COMMENT '기관명',
+    sido_nm varchar(30) DEFAULT NULL COMMENT '시도명',
+    sggu_nm varchar(30) DEFAULT NULL COMMENT '시군구명',
+    hosp_ty_tp_Cd varchar(10) DEFAULT NULL COMMENT '선정유형',
+    tel_no varchar(20) DEFAULT NULL COMMENT '전화번호',
+    adt_fr_dd datetime DEFAULT NULL COMMENT '운영가능일자',
+    spcl_adm_ty_cd varchar(10) DEFAULT NULL COMMENT '구분코드',
     x varchar(20) COMMENT 'x 좌표',
     y varchar(20) COMMENT 'y 좌표'
 )ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -14,29 +15,30 @@ CREATE TABLE hospital(
 
 CREATE TABLE restaurant(
 	id int AUTO_INCREMENT PRIMARY KEY,
-	restaurant varchar(50) COMMENT '사업자명',
-    representative varchar(30) COMMENT '대표자명',
-	zipcode varchar(20) COMMENT '시도코드', 
-	sido varchar(30) COMMENT '시도명',
-	sggu varchar(30) COMMENT '시군구명',
-	category varchar(20) COMMENT '업종',
-	category_detail varchar(20) COMMENT '업종 상세',
-	tel varchar(20) COMMENT '전화번호',
-	etc text COMMENT '비고',
-	selected varchar(5) COMMENT '선정여부',
-	reg_date datetime COMMENT '안심식당 지정일',
-	cancel_date datetime COMMENT '안심식당취소일',
-	update_date datetime COMMENT '수정일',
-	seq int COMMENT '안심식당 seq',
-    add1 varchar(80) COMMENT '주소1',
-    add2 varchar(80) COMMENT '주소2',
+    insert_date datetime NOT NULL COMMENT '해당 row를 테이블에 삽입한 시간',
+	relax_rstrnt_nm varchar(50) COMMENT '사업자명',
+    relax_rstrnt_represent varchar(30) COMMENT '대표자명',
+	relax_zipcode varchar(20) COMMENT '시도코드', 
+	relax_si_nm varchar(30) COMMENT '시도명',
+	relax_sido_nm varchar(30) COMMENT '시군구명',
+	relax_gubun varchar(20) COMMENT '업종',
+	relax_gubun_detail varchar(20) COMMENT '업종 상세',
+	relax_rstrnt_tel varchar(20) COMMENT '전화번호',
+	relax_rstrnt_etc text COMMENT '비고',
+	relax_use_yn varchar(5) COMMENT '선정여부',
+	relax_rstrnt_reg_dt datetime COMMENT '안심식당 지정일',
+	relax_rstrnt_cncl_dt datetime COMMENT '안심식당 취소일',
+	relax_update_dt datetime COMMENT '수정일',
+	relax_seq int COMMENT '안심식당 seq',
+    relax_add1 varchar(80) COMMENT '주소1',
+    relax_add2 varchar(80) COMMENT '주소2',
     x varchar(20) COMMENT 'x 좌표',
     y varchar(20) COMMENT 'y 좌표'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `domestic` (
 	id int NOT NULL AUTO_INCREMENT, 
-	insert_date datetime NOT NULL COMMENT '해당 row를 database에 삽입한 시간',
+	insert_date datetime NOT NULL COMMENT '해당 row를 테이블에 삽입한 시간',
     
     seq int NOT NULL COMMENT '게시글 번호(감염현황 고유값)',
     state_dt datetime NOT NULL COMMENT '기준일',
@@ -57,7 +59,7 @@ CREATE TABLE `domestic` (
 
 CREATE TABLE `city` (
 	id int NOT NULL AUTO_INCREMENT, 
-	insert_date datetime NOT NULL COMMENT '해당 row를 database에 삽입한 시간',
+	insert_date datetime NOT NULL COMMENT '해당 row를 테이블에 삽입한 시간',
     
 	def_cnt int NOT NULL COMMENT '어떤 데이터인지 모름 (설명 없음)',
 	local_occ_cnt int NOT NULL COMMENT '어떤 데이터인지 모름 (설명 없음)',
@@ -79,9 +81,9 @@ CREATE TABLE `city` (
 )ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `age` (
+CREATE TABLE `gen_and_age` (
 	id int NOT NULL AUTO_INCREMENT, 
-	insert_date datetime NOT NULL COMMENT '해당 row를 database에 삽입한 시간',
+	insert_date datetime NOT NULL COMMENT '해당 row를 테이블에 삽입한 시간',
     
     gubun varchar(30) NOT NULL COMMENT '구분(성별, 연령별)',
 	conf_case int NOT NULL COMMENT '확진자',
@@ -97,7 +99,7 @@ CREATE TABLE `age` (
 
 CREATE TABLE `country` (
 	id int NOT NULL AUTO_INCREMENT, 
-	insert_date datetime NOT NULL COMMENT '해당 row를 database에 삽입한 시간',
+	insert_date datetime NOT NULL COMMENT '해당 row를 테이블에 삽입한 시간',
     
     seq int COMMENT '게시글 번호(국외 발생 현황 고유값)',
     area_nm varchar(50) COMMENT '지역명',
