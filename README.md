@@ -18,4 +18,4 @@
 
 # 📺 Demo Video
 
-[![팀 프로젝트 : 코로나 웹 시연 영상](https://i9.ytimg.com/vi/HR3OIMuIykc/mq2.jpg?sqp=CNjOhpMG&rs=AOn4CLCziokzLUPWim9QUtIzfqTq0LPp0g)](https://www.youtube.com/watch?v=HR3OIMuIykc) 
+[![팀 프로젝트 : 코로나 웹 시연 영상](https://user-images.githubusercontent.com/53431518/164533396-d91b369b-7e49-447a-8499-23c19129b4c4.png)](https://www.youtube.com/watch?v=HR3OIMuIykc) 
