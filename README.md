@@ -18,4 +18,4 @@
 
 📺 Demo Video
 
-[![Video Label](https://youtu.be/HR3OIMuIykc)
+![Video Label](https://youtu.be/HR3OIMuIykc)
