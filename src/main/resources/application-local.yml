@@ -1,0 +1,26 @@
+open-api:
+  key:
+    kakao-rest-api-key: ""
+    public-data-api-key: ""
+    covid-restaurant-api-key: ""
+
+
+server:
+  error:
+    include-exception: true
+    include-stacktrace: always
+
+
+spring:
+  datasource:
+    name:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?allowMultiQueries=true&useSSL=false&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC&cacheCallableStmts=true&autoReconnect=true
+    username: root
+    password: root
+    hikari:
+      connection-test-query: SELECT 1
+      minimum-idle: 5
+      maximum-pool-size: 5
+
+debug: true

@@ -1,0 +1,32 @@
+server:
+  servlet:
+    context-path: /
+  port: 8081
+  error:
+    include-exception: false
+    include-stacktrace: NEVER
+
+spring:
+  application:
+    name: covid-web
+  web:
+    locale: en_US
+  messages:
+    basename: messages/messages
+    encoding: UTF-8
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+logging:
+  level:
+    root: info
+
+debug: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
