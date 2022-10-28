@@ -22,7 +22,7 @@
         <div class="limiter">
             <div class="login-container">
                 <div class="login-wrap p-l-60 p-r-60 p-t-55 p-b-40">
-                    <form class="login-form validate-form flex-sb flex-w" method="post" action = "/sign-up">
+                    <form class="login-form validate-form flex-sb flex-w" method="post" action = "/signup">
                         <span class="login-form__title p-b-32">회원가입</span>
 
                         <div class="input-wrap validate-input m-b-15" data-validate="이름을 입력해주세요">

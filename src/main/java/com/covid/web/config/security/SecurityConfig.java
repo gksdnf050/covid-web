@@ -20,9 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
 	private final UserService userService;
-	
 	private final AuthFailureHandler authFailureHandler;
 
 	@Bean
@@ -58,10 +56,5 @@ public class SecurityConfig {
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new CustomUserDetailsService(userService);
-	}
-
-	@Bean
-	public PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
 	}
 }

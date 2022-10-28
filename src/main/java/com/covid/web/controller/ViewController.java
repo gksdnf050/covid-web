@@ -30,7 +30,7 @@ public class ViewController {
 
     @GetMapping("/signup")
     public String signUpView() {
-        return "signUp";
+        return "signup";
     }
 
     // 회원가입 처리
@@ -43,7 +43,7 @@ public class ViewController {
             return "redirect:/login";   // 회원가입 후 로그인 페이지로 리다이렉트
         }else{  // 중복된 이메일인 경우
             redirectAttributes.addFlashAttribute("signUpFailMsg", "이 이메일 주소는 이미 사용 중입니다."); // 메시지를 flashMap에 담고 리다이렉트
-            return "redirect:/sign-up";
+            return "redirect:/signup";
         }
     }
 }
