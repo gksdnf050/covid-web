@@ -1,7 +1,7 @@
 package com.covid.web.service.impl;
 
 import com.covid.web.model.entity.RelaxRestaurant;
-import com.covid.web.mapper.relaxInfo.RelaxRestaurantMapper;
+import com.covid.web.repository.RelaxRestaurantRepository;
 import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.KakaoMapUtil;
 import com.covid.web.util.relaxInfo.RelaxRestaurantUtil;
@@ -23,7 +23,7 @@ public class RelaxRestaurantService implements CovidInfoService {
     private KakaoMapUtil kakaoMapUtil;
 
     @Autowired
-    RelaxRestaurantMapper restaurantMapper;
+    RelaxRestaurantRepository relaxRestaurantRepository;
 
     @Autowired
     RelaxRestaurantUtil restaurantUtil;
@@ -37,8 +37,8 @@ public class RelaxRestaurantService implements CovidInfoService {
         int endIndex = requestSize;	// 요청 종료 위치
         boolean isEnd = false;	// 모든 안심식당 정보를 받아왔는지 나타내는 boolean
 
-        restaurantMapper.deleteAll();	// restaurant 테이블의 모든 row 삭제
-        restaurantMapper.initializeAutoIncrement();	// restaurant의 AUTO_INCREMENT 1으로 초기화
+        relaxRestaurantRepository.deleteAll();	// restaurant 테이블의 모든 row 삭제
+        relaxRestaurantRepository.initializeAutoIncrement();	// restaurant의 AUTO_INCREMENT 1으로 초기화
 
         while (!isEnd) {
             ArrayList<Object> items = (ArrayList<Object>) restaurantUtil.getAllRestaurant(startIndex, endIndex);	// startIndex, endIndex 사이의 안심식당 정보를 받아옴
@@ -55,7 +55,7 @@ public class RelaxRestaurantService implements CovidInfoService {
                     restaurant.setX(pointMap.get("x"));   // 좌표 변환 결과를 dto에 set (좌표 변환에 실패하면 null이 저장됨)
                     restaurant.setY(pointMap.get("y"));
 
-                    insertCount += restaurantMapper.insertInfo(restaurant); // 안심식당 정보를 db에 삽입
+                    insertCount += relaxRestaurantRepository.insertInfo(restaurant); // 안심식당 정보를 db에 삽입
                 }
 
                 startIndex += requestSize;

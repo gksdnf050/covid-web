@@ -1,7 +1,7 @@
 package com.covid.web.service.impl;
 
 import com.covid.web.model.entity.DomesticInfo;
-import com.covid.web.mapper.infectionInfo.DomesticInfoMapper;
+import com.covid.web.repository.DomesticInfoRepository;
 import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.infectionInfo.InfectionInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class DomesticInfoService implements CovidInfoService {
     InfectionInfoUtil infectionInfoUtil;
 
     @Autowired
-    DomesticInfoMapper domesticInfoMapper;
+    DomesticInfoRepository domesticInfoRepository;
 
     @Transactional(readOnly = false)
     @Scheduled(cron = "0 0/30 * * * *") // 30분에 한번씩 동작
@@ -35,10 +35,10 @@ public class DomesticInfoService implements CovidInfoService {
         LinkedHashMap<String, Object> item = (LinkedHashMap<String, Object>) getItemFromXmlResponse(uri);
 
         if(item != null){    // 국내 감염현황 API로부터 데이터를 받아온 경우
-            domesticInfoMapper.deleteAllInfoByDay(today);   // 기준일이 오늘인 정보 모두 삭제
+            domesticInfoRepository.deleteAllInfoByDay(today);   // 기준일이 오늘인 정보 모두 삭제
 
             DomesticInfo domesticDto = (DomesticInfo) mapToDto(item, DomesticInfo.class);   // map을 dto로 변환
-            insertCount += domesticInfoMapper.insertInfo(domesticDto);   // 해당 dto를 domestic 테이블에 삽입 (삽입한 개수를 insertCount에 더함)
+            insertCount += domesticInfoRepository.insertInfo(domesticDto);   // 해당 dto를 domestic 테이블에 삽입 (삽입한 개수를 insertCount에 더함)
         }
 
         return insertCount;

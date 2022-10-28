@@ -1,4 +1,4 @@
-package com.covid.web.mapper.user;
+package com.covid.web.repository;
 
 import com.covid.web.model.entity.UserRole;
 import org.springframework.stereotype.Repository;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRoleMapper {
+public interface UserRoleRepository {
 	List<UserRole> getRolesByEmail(String email);
 	int insertUserRole(UserRole role);
 }

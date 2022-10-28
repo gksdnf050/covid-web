@@ -1,7 +1,7 @@
 package com.covid.web.service.impl;
 
 import com.covid.web.model.entity.GenAndAgeInfo;
-import com.covid.web.mapper.infectionInfo.GenAndAgeInfoMapper;
+import com.covid.web.repository.GenAndAgeInfoRepository;
 import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.infectionInfo.InfectionInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class GenAndAgeInfoService implements CovidInfoService {
     InfectionInfoUtil infectionInfoUtil;
 
     @Autowired
-    GenAndAgeInfoMapper genAndAgeInfoMapper;
+    GenAndAgeInfoRepository genAndAgeInfoRepository;
 
     @Transactional(readOnly = false)
     @Scheduled(cron = "0 0/30 * * * *") // 30분에 한번씩 동작
@@ -36,11 +36,11 @@ public class GenAndAgeInfoService implements CovidInfoService {
         ArrayList<Object> items = (ArrayList<Object>) getItemFromXmlResponse(uri);
 
         if(items != null){  // 성별/연령별 감염현황 API로부터 데이터를 받아온 경우
-            genAndAgeInfoMapper.deleteAllInfoByDay(today);  // 기준일이 오늘인 정보 모두 삭제
+            genAndAgeInfoRepository.deleteAllInfoByDay(today);  // 기준일이 오늘인 정보 모두 삭제
 
             for(Object item : items){   // 각각의 정보를 순회
                 GenAndAgeInfo genAndAgeInfo = (GenAndAgeInfo) mapToDto((Map<String, Object>)item, GenAndAgeInfo.class);  // map을 dto로 변환
-                insertCount += genAndAgeInfoMapper.insertInfo(genAndAgeInfo);   // 해당 dto를 gen_and_age 테이블에 삽입 (삽입한 개수를 insertCount에 더함)
+                insertCount += genAndAgeInfoRepository.insertInfo(genAndAgeInfo);   // 해당 dto를 gen_and_age 테이블에 삽입 (삽입한 개수를 insertCount에 더함)
             }
         }
 

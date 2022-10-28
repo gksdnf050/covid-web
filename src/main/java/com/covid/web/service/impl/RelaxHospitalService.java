@@ -1,7 +1,7 @@
 package com.covid.web.service.impl;
 
 import com.covid.web.model.entity.RelaxHospital;
-import com.covid.web.mapper.relaxInfo.RelaxHospitalMappper;
+import com.covid.web.repository.RelaxHospitalRepository;
 import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.KakaoMapUtil;
 import com.covid.web.util.relaxInfo.RelaxHospitalUtil;
@@ -21,7 +21,7 @@ import static com.covid.web.util.ApiUtil.mapToDto;
 @Service
 public class RelaxHospitalService implements CovidInfoService {
     @Autowired
-    private RelaxHospitalMappper hospitalMappper;
+    private RelaxHospitalRepository hospitalMappper;
 
     @Autowired
     private KakaoMapUtil kakaoMapUtil;
