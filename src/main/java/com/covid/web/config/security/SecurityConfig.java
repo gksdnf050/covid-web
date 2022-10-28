@@ -1,5 +1,7 @@
 package com.covid.web.config.security;
 
+import com.covid.web.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,39 +10,32 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
+public class SecurityConfig {
 
-	@Autowired
-	CustomUserDetailsService customUserDetailsService;
+	private final UserService userService;
 	
-	@Autowired
-	AuthFailureHandler authFailureHandler;
-	 
+	private final AuthFailureHandler authFailureHandler;
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/webjars/**");
-		web.ignoring().antMatchers("/css/**");
-		web.ignoring().antMatchers("/js/**");
-		web.ignoring().antMatchers("/fonts/**");
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().antMatchers("/webjars/**", "/css/**", "/js/**", "/fonts/**");
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(customUserDetailsService).passwordEncoder(encoder());
-	}
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		 http
          .csrf().disable()
          .authorizeRequests()
-         .antMatchers("/login","/sign-up").permitAll()
+         .antMatchers("/login","/signup").permitAll()
          .antMatchers("/main").authenticated()
          .anyRequest().authenticated()
          .and()
@@ -56,6 +51,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 	.logout()
 		 	.logoutUrl("/logout")
 		 	.logoutSuccessUrl("/");
+
+		 return http.build();
+	}
+
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new CustomUserDetailsService(userService);
 	}
 
 	@Bean
