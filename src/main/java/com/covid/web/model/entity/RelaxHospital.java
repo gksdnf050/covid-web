@@ -3,11 +3,13 @@ package com.covid.web.model.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.Date;
 
 @Setter
 @Getter
 @ToString
+@Entity
 public class RelaxHospital {
     private String yadmNm;    // 기관명
     private String sidoNm;    // 시도명
@@ -20,4 +22,9 @@ public class RelaxHospital {
 
     @JsonFormat(pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     private Date adtFrDd;  // 운영가능일자
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 }

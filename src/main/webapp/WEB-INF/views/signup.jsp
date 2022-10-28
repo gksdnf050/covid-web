@@ -26,7 +26,7 @@
                         <span class="login-form__title p-b-32">회원가입</span>
 
                         <div class="input-wrap validate-input m-b-15" data-validate="이름을 입력해주세요">
-                            <input class="input-wrap__input" type="text" name="name" placeholder="이름">
+                            <input class="input-wrap__input" type="text" name="username" placeholder="이름">
                             <span class="input-wrap__input-focus"></span>
                         </div>
 

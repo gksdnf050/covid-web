@@ -120,21 +120,13 @@ CREATE TABLE `country` (
 
 
 CREATE TABLE `user` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'user id',
-  `name` VARCHAR(255) NOT NULL COMMENT 'member name',
-  `password` VARCHAR(255) NOT NULL COMMENT '암호회된 password',
-  `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'login id, email',
-  `create_date` DATETIME NULL DEFAULT NULL COMMENT '등록일',
-  `modify_date` DATETIME NULL DEFAULT NULL COMMENT '수정일',
-  PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-  
-  
-  CREATE TABLE `user_role` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'role id',
-  `user_id` INT(11) NOT NULL COMMENT 'user id fk',
-  `role_name` VARCHAR(100) NOT NULL COMMENT 'role 이름 ROLE_ 로 시작하는 값이어야 한다.',
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`)
-  REFERENCES `user` (`id`)
-)  ENGINE=InnoDB DEFAULT CHARSET=utf8
+    id                      BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username                VARCHAR(255)        NOT NULL,
+    password                VARCHAR(255)        NOT NULL,
+    roles                   VARCHAR(255)        NOT NULL,
+    email                   VARCHAR(255)        NOT NULL,
+    created_at              datetime            NOT NULL DEFAULT current_timestamp,
+    updated_at              datetime            NOT NULL DEFAULT current_timestamp on update CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE Unique INDEX uidx_user_username ON user(username);

@@ -6,11 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
-@Setter
 @ToString
+@Entity
 public class CityInfo {
     @JsonFormat(pattern = "yyyy년 MM월 dd일 HH시", timezone = "Asia/Seoul")
     public Date stdDay;  // 기준 일시
@@ -27,7 +28,8 @@ public class CityInfo {
     public String qurRate;  // 10만명당 발생률 (gubun이 '검역'인 경우 qurRate가 '-'로 넘어와서 String으로 받음.)
 
     /* ignoreProperties */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // https://stackoverflow.com/questions/12505141/only-using-jsonignore-during-serialization-but-not-deserialization 참조 (JsonIgnoreProperties를 사용하면 serialize, deserialize 모두 ignore 됨)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    // https://stackoverflow.com/questions/12505141/only-using-jsonignore-during-serialization-but-not-deserialization 참조 (JsonIgnoreProperties를 사용하면 serialize, deserialize 모두 ignore 됨)
     public int seq; // 게시글 번호(국내 시도별 발생현황 고유값)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String gubunCn; // 시도명(중국어)
@@ -39,4 +41,9 @@ public class CityInfo {
     public Date createDt;    // 등록일시분초
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Date updateDt;   // 수정일시분초
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 }

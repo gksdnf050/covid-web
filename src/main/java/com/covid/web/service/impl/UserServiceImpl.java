@@ -1,62 +1,36 @@
 package com.covid.web.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.covid.web.model.entity.User;
+import com.covid.web.model.transfer.request.SignupRequest;
 import com.covid.web.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.covid.web.model.entity.UserRole;
 import com.covid.web.repository.UserRepository;
-import com.covid.web.repository.UserRoleRepository;
-import com.covid.web.model.entity.UserEntity;
-import com.covid.web.model.entity.UserRoleEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
-	private final UserRoleRepository userRoleRepository;
 
-	public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository) {
-		this.userRepository = userRepository;
-		this.userRoleRepository = userRoleRepository;
-	}
+	public void signUp(SignupRequest signupRequest) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // TODO bean
 
-	@Transactional(readOnly = false)
-	public void signUp(User user) {
-		// 비밀번호 암호화
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		User user = User.builder()
+				.username(signupRequest.getUsername())
+				.email(signupRequest.getEmail())
+				.password(passwordEncoder.encode(signupRequest.getPassword()))
+				.build();
 
-		userRepository.insertUser(user);
-		int userId = user.getId();
-
-		UserRole userRole = new UserRole(userId, "ROLE_USER");
-
-		userRoleRepository.insertUserRole(userRole);
+		userRepository.save(user);
 	}
 
 	@Override
-	public UserEntity getUser(String loginUserId) {
-		User user = userRepository.getUserByEmail(loginUserId);
-
-		if (user == null)
-			return null;
-
-		return new UserEntity(user.getEmail(), user.getPassword());
-	}
-
-	@Override
-	public List<UserRoleEntity> getUserRoles(String loginUserId) {
-		List<UserRole> userRoles = userRoleRepository.getRolesByEmail(loginUserId);
-		List<UserRoleEntity> list = new ArrayList<>();
-
-		for (UserRole userRole : userRoles) {
-			list.add(new UserRoleEntity(loginUserId, userRole.getRoleName()));
-		}
-		return list;
+	public User getUser(String username) {
+		return  userRepository.findByUsername(username);
 	}
 }

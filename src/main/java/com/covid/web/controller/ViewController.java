@@ -1,8 +1,8 @@
 package com.covid.web.controller;
 
 import com.covid.web.model.entity.User;
+import com.covid.web.model.transfer.request.SignupRequest;
 import com.covid.web.service.UserService;
-import com.covid.web.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,19 +28,18 @@ public class ViewController {
         return "login";
     }
 
-    @GetMapping("/sign-up")
+    @GetMapping("/signup")
     public String signUpView() {
         return "signUp";
     }
 
     // 회원가입 처리
-    @PostMapping("sign-up")
-    public String signUp(User userDto, RedirectAttributes redirectAttributes) {
-        String email = userDto.getEmail();
-        UserEntity user = userService.getUser(email);   // 이메일로 중복 확인
+    @PostMapping("signup")
+    public String signUp(SignupRequest signupRequest, RedirectAttributes redirectAttributes) {
+        User user = userService.getUser(signupRequest.getUsername());
 
         if(user == null){   // 중복된 이메일이 아니라면
-            userService.signUp(userDto);    // 회원가입
+            userService.signUp(signupRequest);    // 회원가입
             return "redirect:/login";   // 회원가입 후 로그인 페이지로 리다이렉트
         }else{  // 중복된 이메일인 경우
             redirectAttributes.addFlashAttribute("signUpFailMsg", "이 이메일 주소는 이미 사용 중입니다."); // 메시지를 flashMap에 담고 리다이렉트

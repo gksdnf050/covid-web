@@ -40,7 +40,7 @@
 			
                         <div class="flex-sb-m w-full p-b-40">
                             <div>
-                                <a href="/sign-up" class="txt3">Sign Up</a>
+                                <a href="/signup" class="txt3">Sign Up</a>
                             </div>
                             <div>
                                 <a href="#" class="txt3">Forgot Password?</a>
