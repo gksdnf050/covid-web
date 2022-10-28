@@ -1,6 +1,6 @@
 package com.covid.web.controller.api.infectionInfo;
 
-import com.covid.web.dto.infectionInfo.CityInfo;
+import com.covid.web.model.entity.CityInfo;
 import com.covid.web.mapper.infectionInfo.CityInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

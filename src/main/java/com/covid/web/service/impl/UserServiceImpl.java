@@ -1,18 +1,18 @@
-package com.covid.web.service.user.impl;
+package com.covid.web.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.covid.web.dto.user.User;
-import com.covid.web.service.user.UserService;
+import com.covid.web.model.entity.User;
+import com.covid.web.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.covid.web.dto.user.UserRole;
+import com.covid.web.model.entity.UserRole;
 import com.covid.web.mapper.user.UserMapper;
 import com.covid.web.mapper.user.UserRoleMapper;
-import com.covid.web.dto.user.UserEntity;
-import com.covid.web.dto.user.UserRoleEntity;
+import com.covid.web.model.entity.UserEntity;
+import com.covid.web.model.entity.UserRoleEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service

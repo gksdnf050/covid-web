@@ -1,4 +1,4 @@
-package com.covid.web.dto.user;
+package com.covid.web.config.security;
 
 import lombok.Getter;
 import lombok.Setter;

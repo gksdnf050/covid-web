@@ -14,7 +14,7 @@
         LIMIT ${start}, ${limit};
     </select>
 
-    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.dto.infectionInfo.CountryInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.model.entity.CountryInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
         SELECT *
         FROM (
             SELECT *
@@ -29,7 +29,7 @@
         GROUP BY nation_nm
     </select>
 
-    <insert id = "insertInfo" parameterType="com.covid.web.dto.infectionInfo.CountryInfo">
+    <insert id = "insertInfo" parameterType="com.covid.web.model.entity.CountryInfo">
         INSERT INTO country (insert_date, seq, area_nm, area_nm_en, area_nm_cn, nation_nm, nation_nm_en, nation_nm_cn, nat_def_cnt, nat_death_cnt, nat_death_rate, std_day, create_dt, update_dt)
         VALUES(NOW(), #{seq}, #{areaNm}, #{areaNmEn}, #{areaNmCn}, #{nationNm}, #{nationNmEn}, #{nationNmCn}, #{natDefCnt}, #{natDeathCnt}, #{natDeathRate}, #{stdDay}, #{createDt}, #{updateDt})
     </insert>

@@ -14,7 +14,7 @@
         LIMIT ${start}, ${limit};
     </select>
 
-    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.dto.infectionInfo.CityInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
+    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.model.entity.CityInfo">    <!-- https://myhappyman.tistory.com/76 참고 -->
         SELECT *
         FROM (
             SELECT *
@@ -29,7 +29,7 @@
         GROUP BY gubun
     </select>
 
-    <insert id = "insertInfo" parameterType="com.covid.web.dto.infectionInfo.CityInfo">
+    <insert id = "insertInfo" parameterType="com.covid.web.model.entity.CityInfo">
         INSERT INTO city (insert_date, def_cnt, local_occ_cnt, over_flow_cnt, isol_ing_cnt, seq, death_cnt, gubun, gubun_cn, gubun_en, inc_dec, isol_clear_cnt, qur_rate, create_dt, std_day, update_dt)
         VALUES(NOW(), #{defCnt}, #{localOccCnt}, #{overFlowCnt}, #{isolIngCnt}, #{seq}, #{deathCnt}, #{gubun}, #{gubunCn}, #{gubunEn}, #{incDec}, #{isolClearCnt}, #{qurRate}, #{createDt}, #{stdDay}, #{updateDt})
     </insert>

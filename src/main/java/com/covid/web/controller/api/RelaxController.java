@@ -1,7 +1,7 @@
 package com.covid.web.controller.api;
 
-import com.covid.web.dto.relaxInfo.RelaxHospital;
-import com.covid.web.dto.relaxInfo.RelaxRestaurant;
+import com.covid.web.model.entity.RelaxHospital;
+import com.covid.web.model.entity.RelaxRestaurant;
 import com.covid.web.mapper.relaxInfo.RelaxHospitalMappper;
 import com.covid.web.mapper.relaxInfo.RelaxRestaurantMapper;
 import org.springframework.beans.factory.annotation.Autowired;

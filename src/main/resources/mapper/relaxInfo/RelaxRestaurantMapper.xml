@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.covid.web.mapper.relaxInfo.RelaxRestaurantMapper">
 
-    <select id="getAllRestaurant" resultType="com.covid.web.dto.relaxInfo.RelaxRestaurant">
+    <select id="getAllRestaurant" resultType="com.covid.web.model.entity.RelaxRestaurant">
         SELECT *
         FROM restaurant
         WHERE x IS NOT NULL AND y IS NOT NULL;
     </select>
 
-    <insert id="insertInfo" parameterType="com.covid.web.dto.relaxInfo.RelaxRestaurant">
+    <insert id="insertInfo" parameterType="com.covid.web.model.entity.RelaxRestaurant">
         INSERT INTO restaurant(insert_date, relax_rstrnt_nm, relax_rstrnt_represent, relax_zipcode, relax_si_nm, relax_sido_nm, relax_gubun, relax_gubun_detail, relax_rstrnt_tel, relax_rstrnt_etc, relax_use_yn, relax_rstrnt_reg_dt, relax_rstrnt_cncl_dt, relax_update_dt, relax_seq, relax_add1, relax_add2, x, y)
         VALUES(NOW(), #{relaxRstrntNm}, #{relaxRstrntRepresent}, #{relaxZipcode}, #{relaxSiNm}, #{relaxSidoNm}, #{relaxGubun}, #{relaxGubunDetail}, #{relaxRstrntTel}, #{relaxRstrntEtc}, #{relaxUseYn}, #{relaxRstrntRegDt}, #{relaxRstrntCnclDt},  #{relaxUpdateDt}, #{relaxSeq}, #{relaxAdd1}, #{relaxAdd2}, #{x}, #{y})
     </insert>

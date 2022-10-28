@@ -1,4 +1,4 @@
-package com.covid.web.dto;
+package com.covid.web.model.transfer.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

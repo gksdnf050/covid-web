@@ -1,6 +1,6 @@
 package com.covid.web.controller.api;
 
-import com.covid.web.dto.ApiResponse;
+import com.covid.web.model.transfer.response.ApiResponse;
 import com.covid.web.util.KakaoMapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

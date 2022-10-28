@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.covid.web.mapper.user.UserMapper">
- 	<select id="getUserByEmail" resultType="com.covid.web.dto.user.User">
+ 	<select id="getUserByEmail" resultType="com.covid.web.model.entity.User">
         SELECT id, name, password, email, create_date, modify_date FROM `user` WHERE email = #{email};
     </select>
     
-     <insert id="insertUser" parameterType="com.covid.web.dto.user.User" useGeneratedKeys="true" keyProperty="id">
+     <insert id="insertUser" parameterType="com.covid.web.model.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `user`(name, password, email, create_date, modify_date)
         VALUES(#{name}, #{password}, #{email}, NOW(), NOW())
      </insert>

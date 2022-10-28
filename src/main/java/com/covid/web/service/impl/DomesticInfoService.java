@@ -1,6 +1,6 @@
-package com.covid.web.service.infectionInfo.impl;
+package com.covid.web.service.impl;
 
-import com.covid.web.dto.infectionInfo.DomesticInfo;
+import com.covid.web.model.entity.DomesticInfo;
 import com.covid.web.mapper.infectionInfo.DomesticInfoMapper;
 import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.infectionInfo.InfectionInfoUtil;

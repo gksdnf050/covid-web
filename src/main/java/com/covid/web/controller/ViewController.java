@@ -1,8 +1,8 @@
 package com.covid.web.controller;
 
-import com.covid.web.dto.user.User;
-import com.covid.web.service.user.UserService;
-import com.covid.web.dto.user.UserEntity;
+import com.covid.web.model.entity.User;
+import com.covid.web.service.UserService;
+import com.covid.web.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

@@ -14,7 +14,7 @@
         LIMIT ${start}, ${limit};
     </select>
 
-    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.dto.infectionInfo.GenAndAgeInfo">
+    <select id = "selectMostRecentInfoByDay" resultType="com.covid.web.model.entity.GenAndAgeInfo">
         SELECT *
         FROM (
                  SELECT *
@@ -29,7 +29,7 @@
         GROUP BY gubun;
     </select>
 
-    <insert id = "insertInfo" parameterType="com.covid.web.dto.infectionInfo.GenAndAgeInfo">
+    <insert id = "insertInfo" parameterType="com.covid.web.model.entity.GenAndAgeInfo">
         INSERT INTO gen_and_age (insert_date, gubun, conf_case, conf_case_rate, death, death_rate, critical_rate, create_dt, update_dt)
         VALUES(NOW(), #{gubun}, #{confCase}, #{confCaseRate}, #{death}, #{deathRate}, #{criticalRate}, #{createDt}, #{updateDt})
     </insert>

@@ -1,8 +1,7 @@
 package com.covid.web.util;
 
-import com.covid.web.dto.ApiResponse;
+import com.covid.web.model.transfer.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.covid.web.mapper.user;
 
-import com.covid.web.dto.user.UserRole;
+import com.covid.web.model.entity.UserRole;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

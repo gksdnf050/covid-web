@@ -1,6 +1,6 @@
 package com.covid.web.mapper.user;
 
-import com.covid.web.dto.user.User;
+import com.covid.web.model.entity.User;
 import org.springframework.stereotype.Repository;
 
 @Repository

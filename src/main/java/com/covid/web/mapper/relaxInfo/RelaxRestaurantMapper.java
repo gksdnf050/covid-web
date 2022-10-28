@@ -1,6 +1,6 @@
 package com.covid.web.mapper.relaxInfo;
 
-import com.covid.web.dto.relaxInfo.RelaxRestaurant;
+import com.covid.web.model.entity.RelaxRestaurant;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

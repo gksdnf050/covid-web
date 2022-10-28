@@ -1,6 +1,6 @@
 package com.covid.web.util;
 
-import com.covid.web.dto.ApiResponse;
+import com.covid.web.model.transfer.response.ApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.text.CaseUtils;

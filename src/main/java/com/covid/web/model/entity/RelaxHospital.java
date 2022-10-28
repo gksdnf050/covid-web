@@ -1,4 +1,4 @@
-package com.covid.web.dto.relaxInfo;
+package com.covid.web.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

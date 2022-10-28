@@ -1,6 +1,6 @@
 package com.covid.web.mapper.infectionInfo;
 
-import com.covid.web.dto.infectionInfo.CityInfo;
+import com.covid.web.model.entity.CityInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;

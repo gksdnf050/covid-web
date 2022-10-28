@@ -1,6 +1,6 @@
-package com.covid.web.service.relaxInfo;
+package com.covid.web.service.impl;
 
-import com.covid.web.dto.relaxInfo.RelaxHospital;
+import com.covid.web.model.entity.RelaxHospital;
 import com.covid.web.mapper.relaxInfo.RelaxHospitalMappper;
 import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.KakaoMapUtil;

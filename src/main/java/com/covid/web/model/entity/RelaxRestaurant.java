@@ -1,4 +1,4 @@
-package com.covid.web.dto.relaxInfo;
+package com.covid.web.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
