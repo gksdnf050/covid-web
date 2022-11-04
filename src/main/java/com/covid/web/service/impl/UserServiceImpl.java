@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 				.password(passwordEncoder.encode(signupRequest.getPassword()))
 				.build();
 
-		userRepository.save(user);
+		userRepository.insertUser(user);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.covid.web.config.security;
 
 import com.covid.web.model.entity.User;
+import com.covid.web.model.type.RoleType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
 	private boolean isCredentialsNonExpired;
 
 	private CustomUserDetails(User user) {
-		this.authorities = user.getRoles();
+		this.authorities = RoleType.USER.getRoles();
 		this.username = user.getUsername();
 		this.password = user.getPassword();
 	}

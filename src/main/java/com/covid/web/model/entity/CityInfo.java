@@ -6,12 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @ToString
-@Entity
 public class CityInfo {
     @JsonFormat(pattern = "yyyy년 MM월 dd일 HH시", timezone = "Asia/Seoul")
     public Date stdDay;  // 기준 일시
@@ -41,9 +39,4 @@ public class CityInfo {
     public Date createDt;    // 등록일시분초
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Date updateDt;   // 수정일시분초
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
 }

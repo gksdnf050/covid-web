@@ -6,13 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @Setter
 @ToString
-@Entity
 public class GenAndAgeInfo {
     public String gubun;   // 구분(성별, 연령별)
     public int confCase;    // 확진자
@@ -30,9 +28,4 @@ public class GenAndAgeInfo {
     public Date createDt;   // 등록일시분초
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Date updateDt;   // 수정일시분초   TODO : jsonFormat 추가
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
 }

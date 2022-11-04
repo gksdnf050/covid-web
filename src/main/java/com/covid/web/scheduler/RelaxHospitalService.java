@@ -1,10 +1,10 @@
-package com.covid.web.service.impl;
+package com.covid.web.scheduler;
 
 import com.covid.web.model.entity.RelaxHospital;
 import com.covid.web.repository.RelaxHospitalRepository;
-import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.KakaoMapUtil;
 import com.covid.web.util.relaxInfo.RelaxHospitalUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,15 +19,11 @@ import static com.covid.web.util.ApiUtil.getItemFromXmlResponse;
 import static com.covid.web.util.ApiUtil.mapToDto;
 
 @Service
-public class RelaxHospitalService implements CovidInfoService {
-    @Autowired
-    private RelaxHospitalRepository hospitalMappper;
-
-    @Autowired
-    private KakaoMapUtil kakaoMapUtil;
-
-    @Autowired
-    private RelaxHospitalUtil hospitalUtil;
+@RequiredArgsConstructor
+public class RelaxHospitalService {
+    private final RelaxHospitalRepository hospitalMappper;
+    private final KakaoMapUtil kakaoMapUtil;
+    private final RelaxHospitalUtil hospitalUtil;
 
     @Transactional(readOnly = false)
     @Scheduled(cron = "0 0 0 * * *")  // 매일 00시에 실행 (https://javafactory.tistory.com/1386 참고)

@@ -7,13 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @Setter
 @ToString
-@Entity
 public class DomesticInfo {
     @JsonFormat(pattern = "yyyyMMdd", timezone = "Asia/Seoul")
     public Date stateDt;    // 기준일
@@ -39,9 +37,4 @@ public class DomesticInfo {
     public Date createDt;    // 등록일시분초
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Date updateDt;    // 수정일시분초
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
 }

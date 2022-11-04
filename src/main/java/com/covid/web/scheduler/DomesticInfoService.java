@@ -1,9 +1,9 @@
-package com.covid.web.service.impl;
+package com.covid.web.scheduler;
 
 import com.covid.web.model.entity.DomesticInfo;
 import com.covid.web.repository.DomesticInfoRepository;
-import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.infectionInfo.InfectionInfoUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,10 @@ import java.util.LinkedHashMap;
 import static com.covid.web.util.ApiUtil.*;
 
 @Service
-public class DomesticInfoService implements CovidInfoService {
-    @Autowired
-    InfectionInfoUtil infectionInfoUtil;
-
-    @Autowired
-    DomesticInfoRepository domesticInfoRepository;
+@RequiredArgsConstructor
+public class DomesticInfoService {
+    private final InfectionInfoUtil infectionInfoUtil;
+    private final DomesticInfoRepository domesticInfoRepository;
 
     @Transactional(readOnly = false)
     @Scheduled(cron = "0 0/30 * * * *") // 30분에 한번씩 동작

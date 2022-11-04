@@ -42,7 +42,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-@EnableConfigurationProperties(OpenApiSetting.class)	// https://javacan.tistory.com/entry/springboot-configuration-properties-class 참조
 public class CovidwebApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CovidwebApplication.class, args);

@@ -123,7 +123,6 @@ CREATE TABLE `user` (
     id                      BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username                VARCHAR(255)        NOT NULL,
     password                VARCHAR(255)        NOT NULL,
-    roles                   VARCHAR(255)        NOT NULL,
     email                   VARCHAR(255)        NOT NULL,
     created_at              datetime            NOT NULL DEFAULT current_timestamp,
     updated_at              datetime            NOT NULL DEFAULT current_timestamp on update CURRENT_TIMESTAMP

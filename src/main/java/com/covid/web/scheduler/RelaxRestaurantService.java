@@ -1,10 +1,10 @@
-package com.covid.web.service.impl;
+package com.covid.web.scheduler;
 
 import com.covid.web.model.entity.RelaxRestaurant;
 import com.covid.web.repository.RelaxRestaurantRepository;
-import com.covid.web.service.CovidInfoService;
 import com.covid.web.util.KakaoMapUtil;
 import com.covid.web.util.relaxInfo.RelaxRestaurantUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,11 @@ import static com.covid.web.util.ApiUtil.convertMapKeyToCamelCase;
 import static com.covid.web.util.ApiUtil.mapToDto;
 
 @Service
-public class RelaxRestaurantService implements CovidInfoService {
-    @Autowired
-    private KakaoMapUtil kakaoMapUtil;
-
-    @Autowired
-    RelaxRestaurantRepository relaxRestaurantRepository;
-
-    @Autowired
-    RelaxRestaurantUtil restaurantUtil;
+@RequiredArgsConstructor
+public class RelaxRestaurantService {
+    private final KakaoMapUtil kakaoMapUtil;
+    private final RelaxRestaurantRepository relaxRestaurantRepository;
+    private final RelaxRestaurantUtil restaurantUtil;
 
     @Transactional(readOnly = false)
     @Scheduled(cron = "0 0 0 * * *")	// 매일 00시에 실행

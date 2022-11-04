@@ -1,10 +1,11 @@
 package com.covid.web.repository;
 
 import com.covid.web.model.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+@Mapper
+public interface UserRepository {
 	User findByUsername(String username);
+	int insertUser(User user);
 }

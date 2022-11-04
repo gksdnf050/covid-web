@@ -4,14 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name = "restaurant")
 public class RelaxRestaurant {
 	public int rowNum;
 	public int relaxSeq;	// 안심식당 SEQ
@@ -32,9 +29,4 @@ public class RelaxRestaurant {
 	public Date relaxUpdateDt;	// 수정일
 	public String x;	// x좌표
 	public String y;	// y좌표
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
 }

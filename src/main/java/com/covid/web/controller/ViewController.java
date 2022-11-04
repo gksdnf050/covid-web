@@ -38,11 +38,11 @@ public class ViewController {
     public String signUp(SignupRequest signupRequest, RedirectAttributes redirectAttributes) {
         User user = userService.getUser(signupRequest.getUsername());
 
-        if(user == null){   // 중복된 이메일이 아니라면
+        if(user == null){   // 중복된 username 아니라면
             userService.signUp(signupRequest);    // 회원가입
             return "redirect:/login";   // 회원가입 후 로그인 페이지로 리다이렉트
         }else{  // 중복된 이메일인 경우
-            redirectAttributes.addFlashAttribute("signUpFailMsg", "이 이메일 주소는 이미 사용 중입니다."); // 메시지를 flashMap에 담고 리다이렉트
+            redirectAttributes.addFlashAttribute("signUpFailMsg", "username 이 이미 사용 중입니다."); // 메시지를 flashMap에 담고 리다이렉트
             return "redirect:/signup";
         }
     }
